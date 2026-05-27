@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Our Journey ❤️</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+      background: linear-gradient(-45deg, #ff4d6d, #7209b7, #3a0ca3, #f72585);
+      background-size:400% 400%;
+      animation:bg 10s ease infinite;
+      color:white;
+      overflow-x:hidden;
+      min-height:100vh;
+      padding-bottom:60px;
+    }
+
+    @keyframes bg{
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+
+    h1{
+      text-align:center;
+      padding-top:90px;
+      font-size:clamp(28px,6vw,42px);
+      text-shadow:0 0 10px rgba(255,255,255,0.5), 0 0 20px #ff4d6d;
+    }
+
+    .subtitle{
+      text-align:center;
+      margin-top:10px;
+      opacity:0.9;
+      font-size:15px;
+      padding:0 15px;
+    }
+
+    /* 🌟 TIMELINE */
+    .timeline{
+      position:relative;
+      max-width:900px;
+      margin:60px auto;
+      padding:20px;
+    }
+
+    .timeline::after{
+      content:"";
+      position:absolute;
+      width:5px;
+      background:rgba(255,255,255,0.35);
+      top:0;
+      bottom:0;
+      left:50%;
+      margin-left:-2px;
+      border-radius:20px;
+    }
+
+    .container{
+      padding:15px 40px;
+      position:relative;
+      width:50%;
+      perspective:1000px;
+    }
+
+    .container.left{ left:0; }
+    .container.right{ left:50%; }
+
+    .container::after{
+      content:"💖";
+      position:absolute;
+      width:40px;
+      height:40px;
+      right:-20px;
+      top:25px;
+      background:white;
+      border-radius:50%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-size:18px;
+      z-index:2;
+      box-shadow:0 0 15px rgba(255,255,255,0.6);
+    }
+
+    .right::after{ left:-20px; }
+
+    /* 🌟 CARD ANIMATION (3D ROTATE) */
+    .content{
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(15px);
+      padding:22px;
+      border-radius:22px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+      opacity:0;
+      transform:rotateY(90deg) translateY(30px) scale(0.9);
+      transition:all 0.8s ease;
+      transform-style:preserve-3d;
+    }
+
+    .content.show{
+      opacity:1;
+      transform:rotateY(0deg) translateY(0) scale(1);
+    }
+
+    .content:hover{
+      transform:scale(1.04);
+    }
+
+    .content h2{
+      color:#ffdd57;
+      margin-bottom:12px;
+      font-size:20px;
+    }
+
+    .content p{
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    /* BUTTONS */
+    .backBtn,
+    .langBtn,
+    .musicBtn{
+      position:fixed;
+      padding:10px 16px;
+      border:none;
+      border-radius:25px;
+      background:rgba(255,255,255,0.2);
+      color:white;
+      cursor:pointer;
+      backdrop-filter:blur(10px);
+      z-index:999;
+    }
+
+    .backBtn{ top:15px; left:15px; }
+    .langBtn{ top:15px; right:15px; }
+
+    .musicBtn{
+      bottom:20px;
+      right:20px;
+      width:55px;
+      height:55px;
+      border-radius:50%;
+      font-size:22px;
+    }
+
+    .float{
+      position:fixed;
+      top:-50px;
+      animation:fall linear forwards;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    @keyframes fall{
+      to{
+        transform:translateY(120vh) rotate(360deg);
+        opacity:0;
+      }
+    }
+
+    @media screen and (max-width:768px){
+      .timeline::after{ left:20px; }
+
+      .container{
+        width:100%;
+        padding-left:60px;
+        padding-right:20px;
+      }
+
+      .container.right{ left:0; }
+      .container.left::after,
+      .container.right::after{ left:0; }
+      .content h2{ font-size:18px; }
+      .content p{ font-size:13px; }
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="backBtn" onclick="goBack()">⬅ Back</button>
+  <button class="langBtn" onclick="toggleLanguage()">🌐 தமிழ்</button>
+  <button class="musicBtn" onclick="toggleMusic()">🔊</button>
+
+  <h1 id="mainTitle">❤️ Our Beautiful Journey ❤️</h1>
+  <div class="subtitle" id="subtitle">Every memory with you is magical ✨</div>
+
+  <div class="timeline" id="timelineContainer"></div>
+
+  <script>
+
+    const music = document.getElementById("bgMusic");
+    music.play().catch(()=>{});
+
+    function toggleMusic(){
+      music.paused ? music.play() : music.pause();
+    }
+
+    function goBack(){
+      window.location.href = "/surprice.html";
+    }
+
+    let currentLang = "en";
+
+    const timelineData = [
+      {
+        title:{en:"🎂 The Beginning",ta:"🎂 ஆரம்பம்"},
+        message:{
+          en:"The day you came into this world, happiness entered everyone's life ❤️",
+          ta:"நீ இந்த உலகிற்கு வந்த நாள் அனைவரின் வாழ்க்கையிலும் மகிழ்ச்சி வந்தது ❤️"
+        }
+      },
+      {
+        title:{en:"🌸 Childhood Moments",ta:"🌸 குழந்தை பருவ நினைவுகள்"},
+        message:{
+          en:"Cute smiles, tiny steps, and innocent memories filled with joy 💖",
+          ta:"அழகான சிரிப்புகள், சிறிய அடிகள், இனிய குழந்தை பருவ நினைவுகள் 💖"
+        }
+      },
+      {
+        title:{en:"✨ Favorite Memories",ta:"✨ பிடித்த நினைவுகள்"},
+        message:{
+          en:"Every laugh, every hug, every little moment became priceless 💫",
+          ta:"ஒவ்வொரு சிரிப்பும், அணைப்பும், ஒவ்வொரு தருணமும் விலைமதிப்பற்றது 💫"
+        }
+      },
+      {
+        title:{en:"🏡 Family Love",ta:"🏡 குடும்ப அன்பு"},
+        message:{
+          en:"Your care and kindness made life beautiful ❤️",
+          ta:"உங்கள் அன்பும் அக்கறையும் வாழ்க்கையை அழகாக்கியது ❤️"
+        }
+      },
+      {
+        title:{en:"🎉 Today",ta:"🎉 இன்று"},
+        message:{
+          en:"Today is all about celebrating YOU 💕 Happy Birthday Princess 🎂",
+          ta:"இன்று முழுவதும் உங்களை கொண்டாடுவதற்கான நாள் 💕 இனிய பிறந்தநாள் வாழ்த்துகள் 🎂"
+        }
+      }
+    ];
+
+    function renderTimeline(){
+
+      const container = document.getElementById("timelineContainer");
+      container.innerHTML = "";
+
+      timelineData.forEach((item,index)=>{
+
+        const div = document.createElement("div");
+        div.className = `container ${index%2===0 ? "left":"right"}`;
+
+        const content = document.createElement("div");
+        content.className = "content";
+
+        content.innerHTML = `
+          <h2>${item.title[currentLang]}</h2>
+          <p>${item.message[currentLang]}</p>
+        `;
+
+        div.appendChild(content);
+        container.appendChild(div);
+
+        setTimeout(()=>{
+          content.classList.add("show");
+        }, index * 450);
+
+      });
+
+      document.getElementById("mainTitle").innerHTML =
+        currentLang==="ta"
+        ? "❤️ நமது அழகான பயணம் ❤️"
+        : "❤️ Our Beautiful Journey ❤️";
+
+      document.getElementById("subtitle").innerHTML =
+        currentLang==="ta"
+        ? "உங்களுடன் உள்ள ஒவ்வொரு நினைவும் மந்திரம் ✨"
+        : "Every memory with you is magical ✨";
+    }
+
+    function toggleLanguage(){
+      currentLang = currentLang==="en" ? "ta":"en";
+      document.querySelector(".langBtn").innerText =
+        currentLang==="en" ? "🌐 தமிழ்":"🌐 English";
+      renderTimeline();
+    }
+
+    renderTimeline();
+
+    const emojis = ["💖","✨","🌸","🎉","❤️","💐"];
+
+    function createFloat(){
+      const el = document.createElement("div");
+      el.className = "float";
+      el.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+      el.style.left = Math.random()*100 + "vw";
+      el.style.fontSize = (20+Math.random()*25)+"px";
+      el.style.animationDuration = (4+Math.random()*5)+"s";
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),9000);
+    }
+
+    setInterval(createFloat,400);
+
+  </script>
+
+</body>
+
+</html>

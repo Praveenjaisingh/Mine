@@ -165,7 +165,9 @@
     }
 
     #lettersBtn,
-    #memoriesBtn {
+    #memoriesBtn,
+    #reasonsBtn,
+    #timelineBtn {
       background: white;
       color: black;
     }
@@ -248,6 +250,8 @@
     <button id="celebrateBtn" onclick="celebrate()">🎊 Celebrate</button>
     <button id="lettersBtn" onclick="goLetters()" style="display:none;">💌 Letters</button>
     <button id="memoriesBtn" onclick="goMemories()" style="display:none;">📸 Memories</button>
+    <button id="reasonsBtn" onclick="goReasons()" style="display:none;">❤️ Reasons</button>
+    <button id="timelineBtn" onclick="goTimeline()" style="display:none;">🎉 Timeline</button>
 
   </div>
 
@@ -258,6 +262,14 @@
 
     function goMemories() {
       window.location.href = "/memories.html";
+    }
+
+    function goReasons() {
+      window.location.href = "/reasons.html";
+    }
+
+    function goTimeline() {
+      window.location.href = "/timeline.html";
     }
 
     const music = document.getElementById("bgMusic");
@@ -274,6 +286,8 @@
       const cake = document.querySelector(".cake");
       const lettersBtn = document.getElementById("lettersBtn");
       const memoriesBtn = document.getElementById("memoriesBtn");
+      const reasonsBtn = document.getElementById("reasonsBtn");
+      const timelineBtn = document.getElementById("timelineBtn");
       const celebrateBtn = document.getElementById("celebrateBtn");
 
       cake.innerHTML = "🍰";
@@ -284,6 +298,8 @@
       setTimeout(() => {
         lettersBtn.style.display = "block";
         memoriesBtn.style.display = "block";
+        reasonsBtn.style.display = "block";
+        timelineBtn.style.display = "block";
       }, 1200);
 
       burstFlowers();

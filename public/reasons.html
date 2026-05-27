@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Reasons ❤️</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      padding: 15px;
+      background: linear-gradient(-45deg,
+          #ff4d6d,
+          #7209b7,
+          #3a0ca3,
+          #ff006e);
+      background-size: 400% 400%;
+      animation: bg 10s ease infinite;
+    }
+
+    @keyframes bg {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: clamp(24px, 6vw, 36px);
+      text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.5),
+        0 0 20px #ff4d6d;
+    }
+
+    .langBtn {
+
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 25px;
+      background:
+        rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      z-index: 999;
+    }
+
+    .card {
+
+      width: 100%;
+      max-width: 500px;
+      min-height: 180px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(15px);
+      border-radius: 25px;
+      padding: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-size: clamp(18px, 4vw, 24px);
+      line-height: 1.7;
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: 0.4s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .showBtn {
+
+      margin-top: 25px;
+      padding: 13px 28px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(45deg,
+          #ff4d6d,
+          #ffdd57);
+
+      color: black;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .showBtn:hover {
+      transform: scale(1.05);
+    }
+
+    .backBtn {
+
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+      color: white;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .musicBtn {
+
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 55px;
+      height: 55px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .heart {
+      position: absolute;
+      animation: float 5s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      to {
+        transform: translateY(-120vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <button class="langBtn" onclick="toggleLanguage()">
+    🌐 தமிழ்
+  </button>
+
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="backBtn" onclick="goBack()">
+    ⬅ Back
+  </button>
+
+  <button class="musicBtn" onclick="toggleMusic()">
+    🔊
+  </button>
+
+  <h1>
+    ❤️ Reasons Why You Are Special ❤️
+  </h1>
+
+  <div class="card" id="reasonCard">
+    Click below ❤️
+  </div>
+
+  <button class="showBtn" onclick="showReason()">
+    Show Reason 💖
+  </button>
+
+  <script>
+
+    let currentLang = "en";
+
+    const reasons = [
+
+      {
+        en: "You are the strongest woman in my life ❤️",
+        ta: "என் வாழ்க்கையில் மிக வலிமையான பெண் நீங்கள் ❤️"
+      },
+
+      {
+        en: "Your smile gives peace to everyone 😊",
+        ta: "உங்கள் சிரிப்பு அனைவருக்கும் அமைதியை தருகிறது 😊"
+      },
+
+      {
+        en: "You always care even when tired 💖",
+        ta: "சோர்வாக இருந்தாலும் நீங்கள் எப்போதும் அக்கறை கொள்கிறீர்கள் 💖"
+      },
+
+      {
+        en: "Your love is unconditional 🌸",
+        ta: "உங்கள் அன்பு எல்லையற்றது 🌸"
+      },
+
+      {
+        en: "You make every house feel like home 🏡",
+        ta: "ஒவ்வொரு வீட்டையும் நீங்கள் இல்லமாக மாற்றுகிறீர்கள் 🏡"
+      },
+
+      {
+        en: "Your hugs heal everything 🤗",
+        ta: "உங்கள் அணைப்பு எல்லா வலியையும் குணப்படுத்துகிறது 🤗"
+      },
+
+      {
+        en: "You are my first best friend ❤️",
+        ta: "என் முதல் சிறந்த நண்பர் நீங்கள் ❤️"
+      },
+
+      {
+        en: "You sacrificed so much for happiness 💫",
+        ta: "மகிழ்ச்சிக்காக நீங்கள் பல தியாகங்கள் செய்துள்ளீர்கள் 💫"
+      },
+
+      {
+        en: "You are my superhero 🦸‍♀️",
+        ta: "நீங்கள் என் சூப்பர் ஹீரோ 🦸‍♀️"
+      },
+
+      {
+        en: "Life feels beautiful because of you 💕",
+        ta: "உங்களால் வாழ்க்கை அழகாக இருக்கிறது 💕"
+      }
+    ];
+
+    const music =
+      document.getElementById("bgMusic");
+
+    music.play().catch(() => { });
+
+    function toggleMusic() {
+
+      if (music.paused) {
+
+        music.play();
+
+      } else {
+
+        music.pause();
+      }
+    }
+
+    function toggleLanguage() {
+
+      currentLang =
+        currentLang === "en" ? "ta" : "en";
+
+      document.querySelector(".langBtn")
+        .innerHTML =
+        currentLang === "en"
+          ? "🌐 தமிழ்"
+          : "🌐 English";
+    }
+
+    function showReason() {
+
+      const random =
+        reasons[
+        Math.floor(
+          Math.random() * reasons.length
+        )
+        ];
+
+      document.getElementById("reasonCard")
+        .innerHTML =
+        random[currentLang];
+
+      burstHearts();
+    }
+
+    function burstHearts() {
+
+      for (let i = 0; i < 25; i++) {
+
+        const h =
+          document.createElement("div");
+
+        h.className = "heart";
+
+        h.innerHTML = "💖";
+
+        h.style.left =
+          Math.random() * 100 + "vw";
+
+        h.style.top = "100vh";
+
+        h.style.fontSize =
+          (20 + Math.random() * 25) + "px";
+
+        h.style.animationDuration =
+          (3 + Math.random() * 3) + "s";
+
+        document.body.appendChild(h);
+
+        setTimeout(() => {
+          h.remove();
+        }, 6000);
+      }
+    }
+
+    function goBack() {
+
+      window.location.href =
+        "/surprice.html";
+    }
+
+  </script>
+
+</body>
+
+</html>

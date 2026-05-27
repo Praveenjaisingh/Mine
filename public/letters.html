@@ -46,9 +46,15 @@
     }
 
     @keyframes fall {
-      0% { transform: translateY(-50px) rotate(0); opacity: 0; }
+      0% {
+        transform: translateY(-50px) rotate(0);
+        opacity: 0;
+      }
       10% { opacity: 1; }
-      100% { transform: translateY(120vh) rotate(360deg); opacity: 0.8; }
+      100% {
+        transform: translateY(120vh) rotate(360deg);
+        opacity: 0.8;
+      }
     }
 
     h1 {
@@ -58,37 +64,33 @@
       background: linear-gradient(90deg, #fff, #ffdd57, #fff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: glow 2s infinite alternate;
-    }
-
-    @keyframes glow {
-      from { filter: drop-shadow(0 0 5px #fff); }
-      to { filter: drop-shadow(0 0 18px #ffdd57); }
     }
 
     .back,
     .translate-btn {
       position: fixed;
       top: 15px;
-      padding: 10px 15px;
+      padding: 10px 18px;
       border: none;
       border-radius: 25px;
-      background: rgba(255,255,255,0.9);
-      color: black;
-      font-weight: bold;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
       cursor: pointer;
       z-index: 1000;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      transition: 0.3s;
-    }
-
-    .back:hover,
-    .translate-btn:hover {
-      transform: scale(1.1);
+      transition: 0.3s ease;
     }
 
     .back { left: 15px; }
     .translate-btn { right: 15px; }
+
+    .back:hover,
+    .translate-btn:hover {
+      transform: scale(1.08);
+      background: rgba(255, 255, 255, 0.28);
+    }
 
     #container {
       padding: 20px;
@@ -102,31 +104,18 @@
       margin: 20px auto;
       padding: 22px;
       border-radius: 25px;
-
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 
       opacity: 0;
-      transform: translateY(40px) scale(0.95);
-      animation: fadeUp 0.8s forwards;
-
-      transition: 0.3s;
-      border: 1px solid rgba(255,255,255,0.2);
+      transform: scale(0) rotate(-180deg);
+      transition: all 0.6s ease;
     }
 
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    }
-
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+    .card.show {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
     }
 
     .card h3 {
@@ -138,13 +127,25 @@
     .card p {
       font-size: 15px;
       line-height: 1.7;
-      opacity: 0.95;
     }
 
-    @media(max-width:768px) {
-      h1 { font-size: 24px; }
-      .card { padding: 16px; }
-      .card p { font-size: 14px; }
+    .floating-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .float-item {
+      position: absolute;
+      top: -50px;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-50px) rotate(0); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(120vh) rotate(360deg); opacity: 0.8; }
     }
 
   </style>
@@ -176,7 +177,7 @@
     let lettersData = [];
 
     async function loadLetters() {
-      music.play().catch(() => {});
+      music.play().catch(() => { });
       const res = await fetch("/api/birthday/letters");
       lettersData = await res.json();
       renderLetters();
@@ -189,7 +190,6 @@
       lettersData.forEach((l, index) => {
         const div = document.createElement("div");
         div.className = "card";
-        div.style.animationDelay = (index * 0.25) + "s";
 
         div.innerHTML = `
           <h3>${l.title[currentLang]}</h3>
@@ -197,6 +197,10 @@
         `;
 
         container.appendChild(div);
+
+        setTimeout(() => {
+          div.classList.add("show");
+        }, index * 500); 
       });
     }
 
@@ -209,9 +213,7 @@
       renderLetters();
     }
 
-    loadLetters();
-
-    const items = ["🌸","🌹","💐","🌺","🍫","❤️","✨"];
+    const items = ["🌸", "🌹", "💐", "🌺", "🍫", "❤️", "✨"];
 
     function createFloatingItem() {
       const item = document.createElement("div");
@@ -229,6 +231,7 @@
 
     setInterval(createFloatingItem, 500);
 
+    loadLetters();
   </script>
 
 </body>
