@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Login ❤️</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial;
+      background: linear-gradient(120deg, #ff4d6d, #ffb703, #8ecae6);
+      background-size: 400% 400%;
+      animation: bg 8s infinite;
+      overflow: hidden;
+      color: white;
+      padding: 15px;
+    }
+
+    @keyframes bg {
+      0% {
+        background-position: 0% 50%
+      }
+
+      50% {
+        background-position: 100% 50%
+      }
+
+      100% {
+        background-position: 0% 50%
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      padding: 30px 25px;
+      border-radius: 25px;
+      text-align: center;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      font-size: clamp(18px, 5vw, 28px);
+      margin-bottom: 10px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(45deg, #ff4d6d, #ffb703);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+      width: 100%;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+    }
+
+    .emoji {
+      position: fixed;
+      font-size: 22px;
+      animation: fall linear forwards;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh);
+      }
+    }
+
+    #loginBox {
+      display: none;
+      margin-top: 15px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #msg {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 25px 18px;
+        border-radius: 20px;
+      }
+
+      button {
+        font-size: 15px;
+        padding: 11px;
+      }
+
+      input {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="card">
+
+    <h2>🎂 Birthday Surprise ❤️</h2>
+
+    <button id="startBtn" onclick="showLogin()">
+      Open it ❤️
+    </button>
+
+    <div id="loginBox">
+      <input id="name" placeholder="Enter Princess..." />
+      <button onclick="unlock()">Unlock 🎉</button>
+      <p id="msg"></p>
+    </div>
+
+  </div>
+
+  <script>
+
+    const music = document.getElementById("bgMusic");
+
+    function showLogin() {
+      music.play().catch(() => { });
+      document.getElementById("startBtn").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+    }
+
+    async function unlock() {
+
+      music.play().catch(() => { });
+
+      const name = document.getElementById("name").value;
+
+      const res = await fetch("/api/birthday/unlock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        window.location.href = "/surprice.html";
+      } else {
+        document.getElementById("msg").innerText = data.message;
+      }
+    }
+
+    function spawn() {
+      const items = ["🎈", "🌸", "💐", "🕊️", "✨", "🎂"];
+
+      const e = document.createElement("div");
+      e.className = "emoji";
+
+      e.innerHTML = items[Math.floor(Math.random() * items.length)];
+
+      e.style.left = Math.random() * 100 + "vw";
+      e.style.top = "-30px";
+      e.style.fontSize = (18 + Math.random() * 18) + "px";
+      e.style.animationDuration = (3 + Math.random() * 3) + "s";
+
+      document.body.appendChild(e);
+
+      setTimeout(() => e.remove(), 6000);
+    }
+
+    setInterval(spawn, 300);
+
+  </script>
+
+</body>
+
+</html>

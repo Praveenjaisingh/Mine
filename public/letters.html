@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letters 💌</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #ff4d6d, #7209b7, #3a0ca3, #f72585);
+      background-size: 400% 400%;
+      animation: bgMove 10s ease infinite;
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+      text-align: center;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .floating-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .float-item {
+      position: absolute;
+      top: -50px;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-50px) rotate(0); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(120vh) rotate(360deg); opacity: 0.8; }
+    }
+
+    h1 {
+      margin-top: 90px;
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #fff, #ffdd57, #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 5px #fff); }
+      to { filter: drop-shadow(0 0 18px #ffdd57); }
+    }
+
+    .back,
+    .translate-btn {
+      position: fixed;
+      top: 15px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 25px;
+      background: rgba(255,255,255,0.9);
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .back:hover,
+    .translate-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .back { left: 15px; }
+    .translate-btn { right: 15px; }
+
+    #container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .card {
+      width: 90%;
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 22px;
+      border-radius: 25px;
+
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+      animation: fadeUp 0.8s forwards;
+
+      transition: 0.3s;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #ffdd57;
+    }
+
+    .card p {
+      font-size: 15px;
+      line-height: 1.7;
+      opacity: 0.95;
+    }
+
+    @media(max-width:768px) {
+      h1 { font-size: 24px; }
+      .card { padding: 16px; }
+      .card p { font-size: 14px; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="back" onclick="goBack()">⬅ Back</button>
+  <button class="translate-btn" onclick="toggleLanguage()">🌐 தமிழ்</button>
+
+  <div class="floating-container"></div>
+
+  <h1>💌 Letters for Princess</h1>
+
+  <div id="container"></div>
+
+  <script>
+    const music = document.getElementById("bgMusic");
+
+    function goBack() {
+      window.location.href = "/surprice.html";
+    }
+
+    let currentLang = "en";
+    let lettersData = [];
+
+    async function loadLetters() {
+      music.play().catch(() => {});
+      const res = await fetch("/api/birthday/letters");
+      lettersData = await res.json();
+      renderLetters();
+    }
+
+    function renderLetters() {
+      const container = document.getElementById("container");
+      container.innerHTML = "";
+
+      lettersData.forEach((l, index) => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.style.animationDelay = (index * 0.25) + "s";
+
+        div.innerHTML = `
+          <h3>${l.title[currentLang]}</h3>
+          <p>${l.message[currentLang]}</p>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === "en" ? "ta" : "en";
+
+      document.querySelector(".translate-btn").innerText =
+        currentLang === "en" ? "🌐 தமிழ்" : "🌐 English";
+
+      renderLetters();
+    }
+
+    loadLetters();
+
+    const items = ["🌸","🌹","💐","🌺","🍫","❤️","✨"];
+
+    function createFloatingItem() {
+      const item = document.createElement("div");
+      item.className = "float-item";
+      item.innerHTML = items[Math.floor(Math.random() * items.length)];
+
+      item.style.left = Math.random() * 100 + "vw";
+      item.style.fontSize = (20 + Math.random() * 30) + "px";
+      item.style.animationDuration = (10 + Math.random() * 10) + "s";
+
+      document.querySelector(".floating-container").appendChild(item);
+
+      setTimeout(() => item.remove(), 20000);
+    }
+
+    setInterval(createFloatingItem, 500);
+
+  </script>
+
+</body>
+
+</html>

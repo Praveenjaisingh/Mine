@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Loading...</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: Arial;
+      color: white;
+      text-align: center;
+
+      background: radial-gradient(circle at top left, #ff006e, transparent 40%),
+        radial-gradient(circle at bottom right, #8338ec, transparent 40%),
+        radial-gradient(circle at center, #3a86ff, transparent 60%),
+        linear-gradient(120deg, #0f0c29, #302b63, #24243e);
+      background-size: 200% 200%;
+      animation: bgMove 8s ease-in-out infinite;
+    }
+
+    @keyframes bgMove {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    h1 {
+      font-size: clamp(18px, 6vw, 38px);
+      max-width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid white;
+
+      animation:
+        typing 3s steps(30, end) forwards,
+        blink 0.7s infinite,
+        glow 2s ease-in-out infinite;
+
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+
+    @keyframes typing {
+      from {
+        width: 0
+      }
+
+      to {
+        width: 100%
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        border-color: transparent
+      }
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        text-shadow: 0 0 10px #ff4d6d, 0 0 20px #8338ec;
+      }
+
+      50% {
+        text-shadow: 0 0 20px #3a86ff, 0 0 40px #ff006e;
+      }
+    }
+
+    .loader {
+      margin-top: 12px;
+      font-size: clamp(14px, 4vw, 18px);
+      opacity: 0.85;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 22px;
+      animation: floatUp linear forwards;
+      opacity: 0.9;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-120vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      animation: drift 10s linear infinite;
+      filter: blur(1px);
+    }
+
+    @keyframes drift {
+      0% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-10vh);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        white-space: normal;
+        border-right: none;
+        animation: glow 2s ease-in-out infinite;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <h1>💖 Happy Birthday Darling 💖</h1>
+  <div class="loader">Loading your surprise...</div>
+
+  <script>
+    const isMobile = window.innerWidth < 600;
+
+    function spawn() {
+      const items = ["🎈", "💖", "🎂", "✨", "🌸", "🕊️", "💫", "🎉"];
+      const e = document.createElement("div");
+
+      e.className = "emoji";
+      e.innerHTML = items[Math.floor(Math.random() * items.length)];
+
+      e.style.left = Math.random() * 100 + "vw";
+      e.style.bottom = "-20px";
+
+      const size = isMobile ? (14 + Math.random() * 18) : (18 + Math.random() * 28);
+      e.style.fontSize = size + "px";
+
+      e.style.animationDuration = (3 + Math.random() * 4) + "s";
+
+      document.body.appendChild(e);
+      setTimeout(() => e.remove(), 7000);
+    }
+
+    setInterval(spawn, isMobile ? 260 : 160);
+
+    function particles() {
+      const p = document.createElement("div");
+      p.className = "particle";
+      p.style.left = Math.random() * 100 + "vw";
+      p.style.animationDuration = (6 + Math.random() * 6) + "s";
+      document.body.appendChild(p);
+
+      setTimeout(() => p.remove(), 12000);
+    }
+
+    setInterval(particles, isMobile ? 400 : 200);
+
+    const loaderTime = isMobile ? 6000 : 4500;
+
+    setTimeout(() => {
+      window.location.href = "unlock.html";
+    }, loaderTime);
+
+  </script>
+
+</body>
+
+</html>
