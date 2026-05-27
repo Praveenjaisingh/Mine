@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Surprise 🎉</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap"
+    rel="stylesheet">
 
   <style>
     * {
@@ -53,26 +55,6 @@
       width: 100%;
       max-width: 420px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-      z-index: 10;
-    }
-
-    h1 {
-      font-size: clamp(18px, 5vw, 22px);
-      margin-top: 10px;
-      background: linear-gradient(90deg, #fff, #ffdd57, #fff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glow 2s infinite alternate;
-    }
-
-    @keyframes glow {
-      from {
-        filter: drop-shadow(0 0 5px #fff);
-      }
-
-      to {
-        filter: drop-shadow(0 0 18px #ffdd57);
-      }
     }
 
     .cake {
@@ -111,6 +93,54 @@
       }
     }
 
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 6vw, 30px);
+      text-align: center;
+      margin-top: 12px;
+
+      color: #ffffff;
+      text-shadow:
+        0 0 8px rgba(255, 77, 109, 0.8),
+        0 0 15px rgba(255, 221, 87, 0.6),
+        0 0 25px rgba(255, 255, 255, 0.3);
+
+      letter-spacing: 0.5px;
+      animation: glowTitle 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowTitle {
+      from {
+        transform: scale(1);
+        text-shadow:
+          0 0 6px rgba(255, 255, 255, 0.4),
+          0 0 12px rgba(255, 77, 109, 0.6);
+      }
+
+      to {
+        transform: scale(1.02);
+        text-shadow:
+          0 0 10px rgba(255, 221, 87, 0.8),
+          0 0 20px rgba(255, 77, 109, 0.8);
+      }
+    }
+
+    p {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      font-size: clamp(14px, 4vw, 16px);
+      margin-top: 10px;
+
+      color: #fff;
+      opacity: 0.95;
+
+      text-shadow:
+        0 0 8px rgba(0, 0, 0, 0.4),
+        0 0 12px rgba(255, 255, 255, 0.2);
+
+      letter-spacing: 0.4px;
+    }
+
     button {
       display: block;
       margin: 10px auto;
@@ -119,7 +149,7 @@
       padding: 12px;
       border: none;
       border-radius: 25px;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 15px;
       cursor: pointer;
       transition: 0.3s;
@@ -153,46 +183,48 @@
       }
     }
 
-    @media (max-width: 480px) {
-      .card {
-        padding: 25px 15px;
-        border-radius: 20px;
-      }
-
-      button {
-        font-size: 14px;
-        padding: 11px;
-      }
-
-      h1 {
-        font-size: 16px;
-      }
-    }
-
     .backBtn {
       position: fixed;
-      top: 15px;
-      left: 15px;
-      padding: 10px 14px;
+      top: 10px;
+      left: 10px;
+      padding: 5px 9px;
+      font-size: 12px;
       border: none;
-      border-radius: 25px;
-      background: white;
-      color: black;
-      font-weight: bold;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+      color: white;
+      font-weight: 600;
       cursor: pointer;
-      z-index: 9999;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+      transition: 0.25s ease;
+    }
+
+    .backBtn::before {
+      content: "←";
+      font-size: 12px;
     }
 
     .backBtn:hover {
-      transform: scale(1.1);
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.28);
     }
 
     @media (max-width: 480px) {
-      .backBtn {
-        padding: 8px 12px;
+      .card {
+        padding: 25px 15px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      p {
         font-size: 13px;
+        padding: 0 10px;
       }
     }
   </style>
@@ -204,7 +236,7 @@
     <source src="/music/Anbe En Anbe Bgm.mp3" type="audio/mpeg">
   </audio>
 
-  <button class="backBtn" onclick="goBack()">⬅ Back</button>
+  <button class="backBtn" onclick="goBack()">Back</button>
 
   <div class="card">
 
@@ -214,9 +246,7 @@
     <p>Choose what you want to see</p>
 
     <button id="celebrateBtn" onclick="celebrate()">🎊 Celebrate</button>
-
     <button id="lettersBtn" onclick="goLetters()" style="display:none;">💌 Letters</button>
-
     <button id="memoriesBtn" onclick="goMemories()" style="display:none;">📸 Memories</button>
 
   </div>
@@ -241,7 +271,6 @@
     let continuousInterval = null;
 
     function celebrate() {
-
       const cake = document.querySelector(".cake");
       const lettersBtn = document.getElementById("lettersBtn");
       const memoriesBtn = document.getElementById("memoriesBtn");
@@ -268,9 +297,7 @@
 
     function burstFlowers() {
       for (let i = 0; i < 120; i++) {
-        setTimeout(() => {
-          createFlower(true);
-        }, i * 10);
+        setTimeout(() => createFlower(true), i * 10);
       }
     }
 
