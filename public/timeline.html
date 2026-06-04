@@ -1,332 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Our Journey ❤️</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
   <style>
-
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:'Poppins',sans-serif;
+    :root{
+      --rose:#ff2d78;--coral:#ff6b6b;--peach:#ffb347;--gold:#ffd700;
+      --magenta:#e91e8c;--lavender:#c77dff;
+      --script:'Dancing Script',cursive;--body:'Nunito',sans-serif;
     }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
     body{
-      background: linear-gradient(-45deg, #ff4d6d, #7209b7, #3a0ca3, #f72585);
-      background-size:400% 400%;
-      animation:bg 10s ease infinite;
-      color:white;
-      overflow-x:hidden;
-      min-height:100vh;
-      padding-bottom:60px;
+      min-height:100dvh; overflow-x:hidden; overflow-y:auto;
+      font-family:var(--body); color:white; padding-bottom:60px;
+      background: radial-gradient(ellipse at 20% 0%,  #ff2d78 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 50%,  #7209b7 0%, transparent 50%),
+                  radial-gradient(ellipse at 10% 100%, #ffb347 0%, transparent 45%),
+                  linear-gradient(170deg,#200015 0%,#2d0040 50%,#0a0a20 100%);
     }
 
-    @keyframes bg{
-      0%{background-position:0% 50%;}
-      50%{background-position:100% 50%;}
-      100%{background-position:0% 50%;}
+    .back-btn{
+      position:fixed;top:16px;left:16px;z-index:200;
+      padding:9px 18px;border:1px solid rgba(255,255,255,.3);border-radius:50px;
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
     }
-
-    h1{
-      text-align:center;
-      padding-top:90px;
-      font-size:clamp(28px,6vw,42px);
-      text-shadow:0 0 10px rgba(255,255,255,0.5), 0 0 20px #ff4d6d;
+    .back-btn:hover{background:rgba(255,255,255,.3);}
+    .lang-btn{
+      position:fixed;top:16px;right:16px;z-index:200;
+      padding:9px 18px;border:1px solid rgba(255,255,255,.3);border-radius:50px;
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
     }
-
-    .subtitle{
-      text-align:center;
-      margin-top:10px;
-      opacity:0.9;
-      font-size:15px;
-      padding:0 15px;
+    .lang-btn:hover{background:rgba(255,255,255,.3);}
+    .music-btn{
+      position:fixed;bottom:20px;right:20px;z-index:200;
+      width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-size:22px;cursor:pointer;transition:.25s;
     }
+    .music-btn:hover{transform:scale(1.08);}
 
-    /* 🌟 TIMELINE */
+    .page-header{
+      text-align:center;padding:100px 20px 0;
+      position:relative;z-index:10;
+    }
+    .page-title{
+      font-family:var(--script);font-size:clamp(32px,9vw,52px);font-weight:700;
+      background:linear-gradient(90deg,#ffd700,#ff6b6b,#c77dff,#ffd700);
+      background-size:200%;
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      animation:shimmer 3s linear infinite; line-height:1.2;
+    }
+    @keyframes shimmer{to{background-position:200% center}}
+    .page-sub{font-size:15px;opacity:.8;margin-top:8px;font-weight:600;}
+
     .timeline{
+      position:relative; max-width:860px; margin:56px auto 0;
+      padding:0 20px; z-index:10;
+    }
+
+    .timeline::before{
+      content:''; position:absolute;
+      left:50%; top:0; bottom:0; width:3px;
+      background:linear-gradient(to bottom,transparent,rgba(255,215,0,.5) 10%,rgba(255,45,120,.5) 50%,rgba(199,125,255,.5) 90%,transparent);
+      transform:translateX(-50%);
+      border-radius:3px;
+    }
+
+    .tl-item{
+      display:flex; margin-bottom:48px; align-items:flex-start;
       position:relative;
-      max-width:900px;
-      margin:60px auto;
-      padding:20px;
     }
+    .tl-item:nth-child(odd)  { flex-direction:row; padding-right:calc(50% + 28px); }
+    .tl-item:nth-child(even) { flex-direction:row-reverse; padding-left:calc(50% + 28px); }
 
-    .timeline::after{
-      content:"";
-      position:absolute;
-      width:5px;
-      background:rgba(255,255,255,0.35);
-      top:0;
-      bottom:0;
-      left:50%;
-      margin-left:-2px;
-      border-radius:20px;
-    }
-
-    .container{
-      padding:15px 40px;
-      position:relative;
-      width:50%;
-      perspective:1000px;
-    }
-
-    .container.left{ left:0; }
-    .container.right{ left:50%; }
-
-    .container::after{
-      content:"💖";
-      position:absolute;
-      width:40px;
-      height:40px;
-      right:-20px;
-      top:25px;
-      background:white;
-      border-radius:50%;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      font-size:18px;
-      z-index:2;
-      box-shadow:0 0 15px rgba(255,255,255,0.6);
-    }
-
-    .right::after{ left:-20px; }
-
-    /* 🌟 CARD ANIMATION (3D ROTATE) */
-    .content{
-      background:rgba(255,255,255,0.12);
-      backdrop-filter:blur(15px);
-      padding:22px;
-      border-radius:22px;
-      box-shadow:0 10px 30px rgba(0,0,0,0.3);
-
-      opacity:0;
-      transform:rotateY(90deg) translateY(30px) scale(0.9);
-      transition:all 0.8s ease;
-      transform-style:preserve-3d;
-    }
-
-    .content.show{
-      opacity:1;
-      transform:rotateY(0deg) translateY(0) scale(1);
-    }
-
-    .content:hover{
-      transform:scale(1.04);
-    }
-
-    .content h2{
-      color:#ffdd57;
-      margin-bottom:12px;
-      font-size:20px;
-    }
-
-    .content p{
-      line-height:1.7;
-      font-size:14px;
-    }
-
-    /* BUTTONS */
-    .backBtn,
-    .langBtn,
-    .musicBtn{
-      position:fixed;
-      padding:10px 16px;
-      border:none;
-      border-radius:25px;
-      background:rgba(255,255,255,0.2);
-      color:white;
-      cursor:pointer;
+    .tl-dot{
+      position:absolute; left:50%; top:22px;
+      width:44px; height:44px; border-radius:50%;
+      transform:translateX(-50%);
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px; z-index:5;
+      background:rgba(255,255,255,.15);
+      border:2px solid rgba(255,255,255,.4);
       backdrop-filter:blur(10px);
-      z-index:999;
+      box-shadow:0 0 16px rgba(255,45,120,.4);
+      transition:transform .3s;
+    }
+    .tl-item:hover .tl-dot{transform:translateX(-50%) scale(1.2);}
+
+    .tl-card{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,255,255,.25);
+      backdrop-filter:blur(20px);
+      border-radius:24px;
+      padding:22px 20px;
+      box-shadow:0 8px 32px rgba(255,45,120,.2), inset 0 1px 0 rgba(255,255,255,.25);
+      width:100%;
+      opacity:0; transform:translateY(24px) scale(.96);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .tl-card.visible{opacity:1; transform:translateY(0) scale(1);}
+    .tl-card:hover{transform:scale(1.03)!important; box-shadow:0 12px 40px rgba(255,45,120,.35);}
+
+    .tl-card h2{
+      font-family:var(--script);font-size:clamp(20px,5vw,26px);font-weight:700;
+      color:var(--gold);margin-bottom:10px;
+    }
+    .tl-card p{font-size:14px;line-height:1.75;opacity:.9;}
+    .tl-item:nth-child(1) .tl-card{border-left:3px solid var(--rose);}
+    .tl-item:nth-child(2) .tl-card{border-left:3px solid var(--lavender);}
+    .tl-item:nth-child(3) .tl-card{border-left:3px solid var(--peach);}
+    .tl-item:nth-child(4) .tl-card{border-left:3px solid var(--coral);}
+    .tl-item:nth-child(5) .tl-card{border-left:3px solid var(--gold);}
+
+    .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
+    @keyframes floatUp{
+      0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}
+      95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}
     }
 
-    .backBtn{ top:15px; left:15px; }
-    .langBtn{ top:15px; right:15px; }
-
-    .musicBtn{
-      bottom:20px;
-      right:20px;
-      width:55px;
-      height:55px;
-      border-radius:50%;
-      font-size:22px;
-    }
-
-    .float{
-      position:fixed;
-      top:-50px;
-      animation:fall linear forwards;
-      pointer-events:none;
-      z-index:1;
-    }
-
-    @keyframes fall{
-      to{
-        transform:translateY(120vh) rotate(360deg);
-        opacity:0;
+    @media(max-width:680px){
+      .timeline::before{left:20px;}
+      .tl-item:nth-child(odd),
+      .tl-item:nth-child(even){
+        flex-direction:column; padding:0 0 0 52px;
       }
+      .tl-dot{left:20px; top:16px;}
+      .tl-item:nth-child(odd) .tl-card,
+      .tl-item:nth-child(even) .tl-card{width:100%;}
     }
-
-    @media screen and (max-width:768px){
-      .timeline::after{ left:20px; }
-
-      .container{
-        width:100%;
-        padding-left:60px;
-        padding-right:20px;
-      }
-
-      .container.right{ left:0; }
-      .container.left::after,
-      .container.right::after{ left:0; }
-      .content h2{ font-size:18px; }
-      .content p{ font-size:13px; }
-    }
-
   </style>
-
 </head>
-
 <body>
-
   <audio id="bgMusic" loop>
-    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg">
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg"/>
   </audio>
 
-  <button class="backBtn" onclick="goBack()">⬅ Back</button>
-  <button class="langBtn" onclick="toggleLanguage()">🌐 தமிழ்</button>
-  <button class="musicBtn" onclick="toggleMusic()">🔊</button>
+  <button class="back-btn" onclick="goBack()">← Back</button>
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">🌐 தமிழ்</button>
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
 
-  <h1 id="mainTitle">❤️ Our Beautiful Journey ❤️</h1>
-  <div class="subtitle" id="subtitle">Every memory with you is magical ✨</div>
+  <div class="page-header">
+    <h1 class="page-title" id="mainTitle">❤️ Our Beautiful Journey ❤️</h1>
+    <p class="page-sub" id="mainSub">Every memory with you is magical ✨</p>
+  </div>
 
-  <div class="timeline" id="timelineContainer"></div>
+  <div class="timeline" id="timelineEl"></div>
 
   <script>
-
-    const music = document.getElementById("bgMusic");
+    const music=document.getElementById('bgMusic');
     music.play().catch(()=>{});
 
-    function toggleMusic(){
-      music.paused ? music.play() : music.pause();
-    }
+    let lang='en';
 
-    function goBack(){
-      window.location.href = "/surprice.html";
-    }
-
-    let currentLang = "en";
-
-    const timelineData = [
+    const data=[
       {
-        title:{en:"🎂 The Beginning",ta:"🎂 ஆரம்பம்"},
-        message:{
-          en:"The day you came into this world, happiness entered everyone's life ❤️",
-          ta:"நீ இந்த உலகிற்கு வந்த நாள் அனைவரின் வாழ்க்கையிலும் மகிழ்ச்சி வந்தது ❤️"
-        }
+        icon:'🎂',
+        title:{en:'The Beginning',ta:'ஆரம்பம்'},
+        msg:{en:'The day you came into this world, happiness entered everyone\'s life ❤️',
+             ta:'நீ இந்த உலகிற்கு வந்த நாள் அனைவரின் வாழ்க்கையிலும் மகிழ்ச்சி வந்தது ❤️'}
       },
       {
-        title:{en:"🌸 Childhood Moments",ta:"🌸 குழந்தை பருவ நினைவுகள்"},
-        message:{
-          en:"Cute smiles, tiny steps, and innocent memories filled with joy 💖",
-          ta:"அழகான சிரிப்புகள், சிறிய அடிகள், இனிய குழந்தை பருவ நினைவுகள் 💖"
-        }
+        icon:'🌸',
+        title:{en:'Childhood Moments',ta:'குழந்தை பருவ நினைவுகள்'},
+        msg:{en:'Cute smiles, tiny steps, and innocent memories filled with endless joy 💖',
+             ta:'அழகான சிரிப்புகள், சிறிய அடிகள், இனிய குழந்தை பருவ நினைவுகள் 💖'}
       },
       {
-        title:{en:"✨ Favorite Memories",ta:"✨ பிடித்த நினைவுகள்"},
-        message:{
-          en:"Every laugh, every hug, every little moment became priceless 💫",
-          ta:"ஒவ்வொரு சிரிப்பும், அணைப்பும், ஒவ்வொரு தருணமும் விலைமதிப்பற்றது 💫"
-        }
+        icon:'✨',
+        title:{en:'Favourite Memories',ta:'பிடித்த நினைவுகள்'},
+        msg:{en:'Every laugh, every hug, every little moment became priceless 💫',
+             ta:'ஒவ்வொரு சிரிப்பும், அணைப்பும், ஒவ்வொரு தருணமும் விலைமதிப்பற்றது 💫'}
       },
       {
-        title:{en:"🏡 Family Love",ta:"🏡 குடும்ப அன்பு"},
-        message:{
-          en:"Your care and kindness made life beautiful ❤️",
-          ta:"உங்கள் அன்பும் அக்கறையும் வாழ்க்கையை அழகாக்கியது ❤️"
-        }
+        icon:'🏡',
+        title:{en:'Family Love',ta:'குடும்ப அன்பு'},
+        msg:{en:'Your care and kindness made our life so beautiful ❤️',
+             ta:'உங்கள் அன்பும் அக்கறையும் வாழ்க்கையை அழகாக்கியது ❤️'}
       },
       {
-        title:{en:"🎉 Today",ta:"🎉 இன்று"},
-        message:{
-          en:"Today is all about celebrating YOU 💕 Happy Birthday Princess 🎂",
-          ta:"இன்று முழுவதும் உங்களை கொண்டாடுவதற்கான நாள் 💕 இனிய பிறந்தநாள் வாழ்த்துகள் 🎂"
-        }
-      }
+        icon:'🎉',
+        title:{en:'Today — Your Special Day!',ta:'இன்று — உங்கள் சிறப்பு நாள்!'},
+        msg:{en:'Today is all about celebrating YOU 💕 Happy Birthday, Amma 🎂',
+             ta:'இன்று முழுவதும் உங்களை கொண்டாடுவதற்கான நாள் 💕 இனிய பிறந்தநாள் வாழ்த்துகள் 🎂'}
+      },
     ];
 
-    function renderTimeline(){
-
-      const container = document.getElementById("timelineContainer");
-      container.innerHTML = "";
-
-      timelineData.forEach((item,index)=>{
-
-        const div = document.createElement("div");
-        div.className = `container ${index%2===0 ? "left":"right"}`;
-
-        const content = document.createElement("div");
-        content.className = "content";
-
-        content.innerHTML = `
-          <h2>${item.title[currentLang]}</h2>
-          <p>${item.message[currentLang]}</p>
-        `;
-
-        div.appendChild(content);
-        container.appendChild(div);
-
-        setTimeout(()=>{
-          content.classList.add("show");
-        }, index * 450);
-
+    function render(){
+      const el=document.getElementById('timelineEl');
+      el.innerHTML='';
+      data.forEach((item,i)=>{
+        const div=document.createElement('div');
+        div.className='tl-item';
+        div.innerHTML=`
+          <div class="tl-dot">${item.icon}</div>
+          <div class="tl-card">
+            <h2>${item.title[lang]}</h2>
+            <p>${item.msg[lang]}</p>
+          </div>`;
+        el.appendChild(div);
+        setTimeout(()=>div.querySelector('.tl-card').classList.add('visible'), 200+i*180);
       });
 
-      document.getElementById("mainTitle").innerHTML =
-        currentLang==="ta"
-        ? "❤️ நமது அழகான பயணம் ❤️"
-        : "❤️ Our Beautiful Journey ❤️";
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },{threshold:.15});
+      document.querySelectorAll('.tl-card').forEach(c=>observer.observe(c));
 
-      document.getElementById("subtitle").innerHTML =
-        currentLang==="ta"
-        ? "உங்களுடன் உள்ள ஒவ்வொரு நினைவும் மந்திரம் ✨"
-        : "Every memory with you is magical ✨";
+      const titles={
+        en:{t:'❤️ Our Beautiful Journey ❤️',s:'Every memory with you is magical ✨'},
+        ta:{t:'❤️ நமது அழகான பயணம் ❤️',  s:'உங்களுடன் உள்ள ஒவ்வொரு நினைவும் மந்திரம் ✨'}
+      };
+      document.getElementById('mainTitle').textContent=titles[lang].t;
+      document.getElementById('mainSub').textContent=titles[lang].s;
     }
+    render();
 
-    function toggleLanguage(){
-      currentLang = currentLang==="en" ? "ta":"en";
-      document.querySelector(".langBtn").innerText =
-        currentLang==="en" ? "🌐 தமிழ்":"🌐 English";
-      renderTimeline();
+    function toggleLang(){
+      lang=lang==='en'?'ta':'en';
+      document.getElementById('langBtn').textContent=lang==='en'?'🌐 தமிழ்':'🌐 English';
+      render();
     }
-
-    renderTimeline();
-
-    const emojis = ["💖","✨","🌸","🎉","❤️","💐"];
-
-    function createFloat(){
-      const el = document.createElement("div");
-      el.className = "float";
-      el.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
-      el.style.left = Math.random()*100 + "vw";
-      el.style.fontSize = (20+Math.random()*25)+"px";
-      el.style.animationDuration = (4+Math.random()*5)+"s";
-      document.body.appendChild(el);
-      setTimeout(()=>el.remove(),9000);
+    function toggleMusic(){ music.paused?music.play():music.pause(); document.getElementById('musicBtn').textContent=music.paused?'🔇':'🔊'; }
+    function goBack(){ window.location.href='/surprice.html'; }
+    const emojis=['🌸','💖','✨','🌺','🎀','💝','🌷','🎈'];
+    function spawnFloat(){
+      const e=document.createElement('div');e.className='floaty';
+      e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${14+Math.random()*18}px;
+        animation-duration:${5+Math.random()*5}s;`;
+      document.body.appendChild(e);setTimeout(()=>e.remove(),10000);
     }
-
-    setInterval(createFloat,400);
-
+    setInterval(spawnFloat,500);
   </script>
-
 </body>
-
 </html>

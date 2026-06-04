@@ -1,341 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reasons ❤️</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+    :root{
+      --rose:#ff2d78;--coral:#ff6b6b;--peach:#ffb347;--gold:#ffd700;
+      --magenta:#e91e8c;--lavender:#c77dff;
+      --script:'Dancing Script',cursive;--body:'Nunito',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      min-height:100dvh; overflow:hidden;
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      font-family:var(--body); color:white; padding:20px;
+      background: radial-gradient(ellipse at 0% 30%,   #ff2d78 0%, transparent 55%),
+                  radial-gradient(ellipse at 100% 70%,  #c77dff 0%, transparent 55%),
+                  radial-gradient(ellipse at 50% 0%,    #ffb347 0%, transparent 40%),
+                  linear-gradient(170deg,#2d001a 0%,#1a0030 50%,#0a100a 100%);
     }
 
-    body {
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      color: white;
-      padding: 15px;
-      background: linear-gradient(-45deg,
-          #ff4d6d,
-          #7209b7,
-          #3a0ca3,
-          #ff006e);
-      background-size: 400% 400%;
-      animation: bg 10s ease infinite;
+    .back-btn{
+      position:fixed;top:16px;left:16px;z-index:200;
+      padding:9px 18px; border:1px solid rgba(255,255,255,.3); border-radius:50px;
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
+    }
+    .back-btn:hover{background:rgba(255,255,255,.3);}
+
+    .lang-btn{
+      position:fixed;top:16px;right:16px;z-index:200;
+      padding:9px 18px; border:1px solid rgba(255,255,255,.3); border-radius:50px;
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
+    }
+    .lang-btn:hover{background:rgba(255,255,255,.3);}
+
+    .music-btn{
+      position:fixed;bottom:20px;right:20px;z-index:200;
+      width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-size:22px;cursor:pointer;transition:.25s;
+    }
+    .music-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.08);}
+
+    .counter{
+      font-family:var(--body);font-size:12px;letter-spacing:3px;text-transform:uppercase;
+      opacity:.6;margin-bottom:6px;
+      animation:fadeUp .5s ease both;
     }
 
-    @keyframes bg {
-      0% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-
-      100% {
-        background-position: 0% 50%;
-      }
+    h1{
+      font-family:var(--script);font-size:clamp(28px,8vw,44px);font-weight:700;
+      background:linear-gradient(90deg,#ffd700,#ff6b6b,#c77dff,#ffd700);
+      background-size:200%;
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      animation:shimmer 3s linear infinite;
+      line-height:1.2;text-align:center;margin-bottom:20px;
+    }
+    @keyframes shimmer{to{background-position:200% center}}
+    .reason-card{
+      width:min(500px,94vw);
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(255,255,255,.3);
+      backdrop-filter:blur(24px);
+      border-radius:28px;
+      padding:clamp(24px,5vw,36px);
+      box-shadow:0 12px 48px rgba(255,45,120,.28), inset 0 1px 0 rgba(255,255,255,.3);
+      text-align:center; position:relative; overflow:hidden;
+      min-height:160px;
+      display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;
+    }
+    .reason-card::before{
+      content:''; position:absolute;inset:0;
+      background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,.12),transparent 60%);
+      pointer-events:none;
     }
 
-    h1 {
-      margin-bottom: 20px;
-      text-align: center;
-      font-size: clamp(24px, 6vw, 36px);
-      text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.5),
-        0 0 20px #ff4d6d;
+    .reason-number{
+      font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.5;font-weight:700;
+    }
+    .reason-text{
+      font-size:clamp(18px,5vw,24px);font-weight:700;line-height:1.6;
+      text-shadow:0 2px 16px rgba(255,45,120,.3);
+      transition:opacity .3s;
+    }
+    .reason-text.fade{opacity:0;}
+
+    .show-btn{
+      margin-top:18px; padding:15px 36px;
+      background:linear-gradient(135deg,#ff2d78,#e91e8c,#ffb347);
+      border:none;border-radius:50px;
+      color:white;font-family:var(--body);font-weight:800;font-size:16px;
+      cursor:pointer;transition:.25s;
+      box-shadow:0 6px 28px rgba(255,45,120,.45);
+      position:relative;overflow:hidden;
+    }
+    .show-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.2),transparent);}
+    .show-btn:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(255,45,120,.6);}
+
+    .dots{display:flex;gap:6px;margin-top:16px;flex-wrap:wrap;justify-content:center;}
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:rgba(255,255,255,.25);transition:.4s;
+    }
+    .dot.active{background:var(--gold);box-shadow:0 0 8px var(--gold);}
+    .heart{position:fixed;pointer-events:none;z-index:1;animation:heartFloat linear forwards;}
+    @keyframes heartFloat{
+      0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}
+      95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(360deg);opacity:0}
+    }
+    .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
+    @keyframes floatUp{
+      0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}
+      95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}
     }
 
-    .langBtn {
-
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 25px;
-      background:
-        rgba(255, 255, 255, 0.2);
-      color: white;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      z-index: 999;
-    }
-
-    .card {
-
-      width: 100%;
-      max-width: 500px;
-      min-height: 180px;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(15px);
-      border-radius: 25px;
-      padding: 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      font-size: clamp(18px, 4vw, 24px);
-      line-height: 1.7;
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.3);
-      transition: 0.4s;
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-    }
-
-    .showBtn {
-
-      margin-top: 25px;
-      padding: 13px 28px;
-      border: none;
-      border-radius: 30px;
-      background: linear-gradient(45deg,
-          #ff4d6d,
-          #ffdd57);
-
-      color: black;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .showBtn:hover {
-      transform: scale(1.05);
-    }
-
-    .backBtn {
-
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 25px;
-      background: rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(10px);
-      color: white;
-      cursor: pointer;
-      z-index: 999;
-    }
-
-    .musicBtn {
-
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 55px;
-      height: 55px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      color: white;
-      font-size: 22px;
-      cursor: pointer;
-      z-index: 999;
-    }
-
-    .heart {
-      position: absolute;
-      animation: float 5s linear forwards;
-      pointer-events: none;
-    }
-
-    @keyframes float {
-      to {
-        transform: translateY(-120vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .card-wrap{animation:fadeUp .7s ease both;}
   </style>
-
 </head>
-
 <body>
-
-  <button class="langBtn" onclick="toggleLanguage()">
-    🌐 தமிழ்
-  </button>
-
   <audio id="bgMusic" loop>
-    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg">
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg"/>
   </audio>
 
-  <button class="backBtn" onclick="goBack()">
-    ⬅ Back
-  </button>
+  <button class="back-btn" onclick="goBack()">← Back</button>
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">🌐 தமிழ்</button>
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
 
-  <button class="musicBtn" onclick="toggleMusic()">
-    🔊
-  </button>
+  <div class="card-wrap">
+    <div class="counter" id="counter">Reason 0 of 10</div>
+    <h1>Why You're So Special ❤️</h1>
 
-  <h1>
-    ❤️ Reasons Why You Are Special ❤️
-  </h1>
+    <div class="reason-card">
+      <div class="reason-number" id="reasonNum">—</div>
+      <div class="reason-text" id="reasonText">Tap the button to discover a reason 💖</div>
+    </div>
 
-  <div class="card" id="reasonCard">
-    Click below ❤️
+    <div class="dots" id="dots"></div>
+    <button class="show-btn" onclick="showReason()">💖 Show a Reason</button>
   </div>
 
-  <button class="showBtn" onclick="showReason()">
-    Show Reason 💖
-  </button>
-
   <script>
+    const music=document.getElementById('bgMusic');
+    music.play().catch(()=>{});
 
-    let currentLang = "en";
+    let lang='en', used=[], idx=0;
 
-    const reasons = [
-
-      {
-        en: "You are the strongest woman in my life ❤️",
-        ta: "என் வாழ்க்கையில் மிக வலிமையான பெண் நீங்கள் ❤️"
-      },
-
-      {
-        en: "Your smile gives peace to everyone 😊",
-        ta: "உங்கள் சிரிப்பு அனைவருக்கும் அமைதியை தருகிறது 😊"
-      },
-
-      {
-        en: "You always care even when tired 💖",
-        ta: "சோர்வாக இருந்தாலும் நீங்கள் எப்போதும் அக்கறை கொள்கிறீர்கள் 💖"
-      },
-
-      {
-        en: "Your love is unconditional 🌸",
-        ta: "உங்கள் அன்பு எல்லையற்றது 🌸"
-      },
-
-      {
-        en: "You make every house feel like home 🏡",
-        ta: "ஒவ்வொரு வீட்டையும் நீங்கள் இல்லமாக மாற்றுகிறீர்கள் 🏡"
-      },
-
-      {
-        en: "Your hugs heal everything 🤗",
-        ta: "உங்கள் அணைப்பு எல்லா வலியையும் குணப்படுத்துகிறது 🤗"
-      },
-
-      {
-        en: "You are my first best friend ❤️",
-        ta: "என் முதல் சிறந்த நண்பர் நீங்கள் ❤️"
-      },
-
-      {
-        en: "You sacrificed so much for happiness 💫",
-        ta: "மகிழ்ச்சிக்காக நீங்கள் பல தியாகங்கள் செய்துள்ளீர்கள் 💫"
-      },
-
-      {
-        en: "You are my superhero 🦸‍♀️",
-        ta: "நீங்கள் என் சூப்பர் ஹீரோ 🦸‍♀️"
-      },
-
-      {
-        en: "Life feels beautiful because of you 💕",
-        ta: "உங்களால் வாழ்க்கை அழகாக இருக்கிறது 💕"
-      }
+    const reasons=[
+      {en:"You are the strongest woman in my life ❤️",        ta:"என் வாழ்க்கையில் மிக வலிமையான பெண் நீங்கள் ❤️"},
+      {en:"Your smile gives peace to everyone 😊",            ta:"உங்கள் சிரிப்பு அனைவருக்கும் அமைதியை தருகிறது 😊"},
+      {en:"You always care even when you're tired 💖",        ta:"சோர்வாக இருந்தாலும் நீங்கள் எப்போதும் அக்கறை கொள்கிறீர்கள் 💖"},
+      {en:"Your love is unconditional and endless 🌸",        ta:"உங்கள் அன்பு நிபந்தனையற்றது, எல்லையற்றது 🌸"},
+      {en:"You make every house feel like home 🏡",           ta:"ஒவ்வொரு வீட்டையும் நீங்கள் இல்லமாக மாற்றுகிறீர்கள் 🏡"},
+      {en:"Your hugs heal everything 🤗",                     ta:"உங்கள் அணைப்பு எல்லா வலியையும் குணப்படுத்துகிறது 🤗"},
+      {en:"You are my very first best friend ❤️",             ta:"என் முதல் சிறந்த நண்பர் நீங்கள் ❤️"},
+      {en:"You sacrificed so much for our happiness 💫",      ta:"மகிழ்ச்சிக்காக நீங்கள் பல தியாகங்கள் செய்துள்ளீர்கள் 💫"},
+      {en:"You are my superhero 🦸‍♀️",                          ta:"நீங்கள் என் சூப்பர் ஹீரோ 🦸‍♀️"},
+      {en:"Life feels beautiful because of you 💕",           ta:"உங்களால் வாழ்க்கை அழகாக இருக்கிறது 💕"},
     ];
 
-    const music =
-      document.getElementById("bgMusic");
+    const dotsEl=document.getElementById('dots');
+    reasons.forEach((_,i)=>{ const d=document.createElement('div');d.className='dot';d.id='dot-'+i;dotsEl.appendChild(d); });
 
-    music.play().catch(() => { });
+    function showReason(){
+      if(used.length===reasons.length) used=[];
+      let pick; do{ pick=Math.floor(Math.random()*reasons.length); }while(used.includes(pick));
+      used.push(pick); idx=pick;
 
-    function toggleMusic() {
+      const textEl=document.getElementById('reasonText');
+      textEl.classList.add('fade');
+      setTimeout(()=>{
+        textEl.textContent=reasons[pick][lang];
+        document.getElementById('reasonNum').textContent=`Reason #${pick+1}`;
+        document.getElementById('counter').textContent=`Shown ${used.length} of ${reasons.length}`;
+        textEl.classList.remove('fade');
+        document.querySelectorAll('.dot').forEach(d=>d.classList.remove('active'));
+        document.getElementById('dot-'+pick).classList.add('active');
+        burstHearts();
+      },300);
+    }
 
-      if (music.paused) {
-
-        music.play();
-
-      } else {
-
-        music.pause();
+    function burstHearts(){
+      const h=['💖','💝','💗','🌸','✨','🌷'];
+      for(let i=0;i<20;i++){
+        setTimeout(()=>{
+          const e=document.createElement('div');e.className='heart';
+          e.textContent=h[Math.floor(Math.random()*h.length)];
+          e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${18+Math.random()*20}px;
+            animation-duration:${3+Math.random()*3}s;`;
+          document.body.appendChild(e);setTimeout(()=>e.remove(),7000);
+        },i*60);
       }
     }
 
-    function toggleLanguage() {
-
-      currentLang =
-        currentLang === "en" ? "ta" : "en";
-
-      document.querySelector(".langBtn")
-        .innerHTML =
-        currentLang === "en"
-          ? "🌐 தமிழ்"
-          : "🌐 English";
+    const emojis=['🌸','💖','✨','🌺','🎀','💝','🌷'];
+    function spawnFloat(){
+      const e=document.createElement('div');e.className='floaty';
+      e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${14+Math.random()*16}px;
+        animation-duration:${5+Math.random()*4}s;`;
+      document.body.appendChild(e);setTimeout(()=>e.remove(),9000);
     }
+    setInterval(spawnFloat,500);
 
-    function showReason() {
-
-      const random =
-        reasons[
-        Math.floor(
-          Math.random() * reasons.length
-        )
-        ];
-
-      document.getElementById("reasonCard")
-        .innerHTML =
-        random[currentLang];
-
-      burstHearts();
-    }
-
-    function burstHearts() {
-
-      for (let i = 0; i < 25; i++) {
-
-        const h =
-          document.createElement("div");
-
-        h.className = "heart";
-
-        h.innerHTML = "💖";
-
-        h.style.left =
-          Math.random() * 100 + "vw";
-
-        h.style.top = "100vh";
-
-        h.style.fontSize =
-          (20 + Math.random() * 25) + "px";
-
-        h.style.animationDuration =
-          (3 + Math.random() * 3) + "s";
-
-        document.body.appendChild(h);
-
-        setTimeout(() => {
-          h.remove();
-        }, 6000);
+    function toggleLang(){
+      lang=lang==='en'?'ta':'en';
+      document.getElementById('langBtn').textContent=lang==='en'?'🌐 தமிழ்':'🌐 English';
+      if(used.length>0){
+        const textEl=document.getElementById('reasonText');
+        textEl.classList.add('fade');
+        setTimeout(()=>{ textEl.textContent=reasons[idx][lang]; textEl.classList.remove('fade'); },300);
       }
     }
-
-    function goBack() {
-
-      window.location.href =
-        "/surprice.html";
-    }
-
+    function toggleMusic(){ music.paused?music.play():music.pause(); document.getElementById('musicBtn').textContent=music.paused?'🔇':'🔊'; }
+    function goBack(){ window.location.href='/surprice.html'; }
   </script>
-
 </body>
-
 </html>
