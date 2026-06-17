@@ -122,8 +122,8 @@ const quiz = [
     question: { en: "What is Mom's favorite festival?", ta: "அம்மாவின் பிடித்த பண்டிகை எது?" },
     options: [
       { en: "Diwali", ta: "தீபாவளி" },
-      { en: "Pongal", ta: "பொங்கல்" },
-      { en: "New Year", ta: "புத்தாண்டு" },
+      { en: "Pongal", ta: "Pongal" },
+      { en: "New Year", ta: "தமிழில் புத்தாண்டு" },
       { en: "Her Birthday 🎂", ta: "அவளுடைய பிறந்தநாள் 🎂" }
     ],
     correctIndex: 0
@@ -131,7 +131,7 @@ const quiz = [
   {
     question: { en: "What dish does Mom make best?", ta: "அம்மா சமைக்கும் சிறந்த உணவு எது?" },
     options: [
-      { en: "Biryani", ta: "பிரியாணி" },
+      { en: "Biryani", ta: "Biryani" },
       { en: "Sambar", ta: "சாம்பார்" },
       { en: "Sweets", ta: "இனிப்புகள்" },
       { en: "Everything! 😋", ta: "எல்லாமே! 😋" }
@@ -206,7 +206,7 @@ const playlist = [
     emoji: "🎻"
   },
   {
-    title: { en: "Vikram Vedha — Love Theme", ta: "விக்ரம் வேதா — லவ் தீம்" },
+    title: { en: "Vikram Vedha — Love Theme", ta: "Vikram Vedha — Love Theme" },
     note: { en: "A beautiful tune for beautiful memories ✨", ta: "அழகான நினைவுகளுக்கான அழகான இசை ✨" },
     src: "/music/Vikram%20Vedha%20Love%20Bgm.mp3",
     emoji: "🎶"
