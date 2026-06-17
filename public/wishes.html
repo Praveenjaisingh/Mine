@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Wishes Wall 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --rose:#ff2d78;--coral:#ff6b6b;--peach:#ffb347;--gold:#ffd700;
+      --magenta:#e91e8c;--lavender:#c77dff;--sky:#4cc9f0;
+      --script:'Dancing Script',cursive;--body:'Nunito',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      min-height:100dvh; overflow-x:hidden;
+      font-family:var(--body); color:white;
+      padding-bottom:80px;
+      background:
+        radial-gradient(ellipse at 90% 0%,   #4cc9f0 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 100%, #c77dff 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%,  #ff2d78 0%, transparent 55%),
+        linear-gradient(160deg,#0a0a2a 0%,#1a0030 50%,#08101a 100%);
+    }
+
+    .stars{position:fixed;inset:0;pointer-events:none;z-index:0;}
+    .star{position:absolute;border-radius:50%;background:white;animation:twinkle ease-in-out infinite;}
+    @keyframes twinkle{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.9;transform:scale(1.5)}}
+
+    .back-btn,.lang-btn{
+      position:fixed;top:16px;z-index:300;
+      padding:9px 18px;border:1px solid rgba(255,255,255,.3);border-radius:50px;
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
+    }
+    .back-btn{left:16px;} .lang-btn{right:16px;}
+    .back-btn:hover,.lang-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05);}
+
+    .music-btn{
+      position:fixed;bottom:20px;right:20px;z-index:300;
+      width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-size:22px;cursor:pointer;transition:.25s;
+    }
+    .music-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.08);}
+
+    .page-header{position:relative;z-index:10;text-align:center;padding:90px 20px 18px;}
+    .header-icon{
+      font-size:clamp(52px,14vw,72px);display:block;line-height:1;margin-bottom:8px;
+      animation:iconFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(76,201,240,.6));
+    }
+    @keyframes iconFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
+    .page-title{
+      font-family:var(--script);font-size:clamp(32px,9vw,52px);font-weight:700;
+      background:linear-gradient(90deg,#4cc9f0,#c77dff,#ff2d78,#4cc9f0);
+      background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      animation:shimmer 3.5s linear infinite;line-height:1.2;
+    }
+    @keyframes shimmer{to{background-position:200% center}}
+    .page-sub{font-size:14px;opacity:.75;margin-top:6px;font-weight:600;}
+
+    .add-wish-btn{
+      display:block;margin:18px auto 0;padding:13px 30px;border:none;border-radius:50px;
+      background:linear-gradient(135deg,#4cc9f0,#c77dff,#ff2d78);
+      color:white;font-family:var(--body);font-weight:800;font-size:14px;cursor:pointer;
+      box-shadow:0 8px 28px rgba(76,201,240,.4);transition:.25s;
+    }
+    .add-wish-btn:hover{transform:translateY(-2px) scale(1.03);}
+
+    .form-wrap{
+      position:relative;z-index:10;width:min(440px,92vw);margin:18px auto 0;
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+      backdrop-filter:blur(20px);border-radius:24px;padding:22px;display:none;
+    }
+    .form-wrap.show{display:block;animation:cardIn .5s ease both;}
+    @keyframes cardIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+    .form-wrap input,.form-wrap textarea{
+      width:100%;padding:12px 14px;margin-bottom:10px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);
+      color:white;font-family:var(--body);font-size:14px;resize:vertical;
+    }
+    .form-wrap input::placeholder,.form-wrap textarea::placeholder{color:rgba(255,255,255,.55);}
+    .form-actions{display:flex;gap:10px;}
+    .form-actions button{
+      flex:1;padding:11px;border:none;border-radius:14px;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;
+    }
+    .btn-submit{background:linear-gradient(135deg,#4cc9f0,#ff2d78);color:white;}
+    .btn-cancel{background:rgba(255,255,255,.15);color:white;}
+
+    #container{
+      position:relative;z-index:10;max-width:980px;margin:28px auto 0;padding:0 16px;
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:20px;
+    }
+    .wish-card{
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);
+      backdrop-filter:blur(22px);border-radius:24px;padding:clamp(20px,4vw,28px);
+      box-shadow:0 10px 36px rgba(76,201,240,.18), inset 0 1px 0 rgba(255,255,255,.26);
+      position:relative;overflow:hidden;
+      opacity:0;transform:translateY(24px) scale(.95);transition:opacity .55s ease, transform .55s ease;
+    }
+    .wish-card.show{opacity:1;transform:translateY(0) scale(1);}
+    .wish-card.mine{border-color:rgba(255,214,10,.55);}
+    .wish-stamp{position:absolute;top:14px;right:16px;font-size:24px;opacity:.7;}
+    .wish-from{font-family:var(--script);font-size:clamp(19px,5vw,23px);font-weight:700;color:var(--sky);margin-bottom:10px;}
+    .wish-msg{font-size:clamp(13px,3.5vw,15px);line-height:1.75;opacity:.92;}
+    .wish-card:nth-child(3n+1){border-top:3px solid var(--sky);}
+    .wish-card:nth-child(3n+2){border-top:3px solid var(--lavender);}
+    .wish-card:nth-child(3n){border-top:3px solid var(--rose);}
+
+    .loading-wrap,.error-wrap{grid-column:1/-1;text-align:center;padding:50px 20px;opacity:.7;}
+
+    .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
+    @keyframes floatUp{0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}}
+  </style>
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg"/>
+  </audio>
+
+  <button class="back-btn" onclick="goBack()">← Back</button>
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">🌐 தமிழ்</button>
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
+
+  <div class="page-header">
+    <span class="header-icon">💌</span>
+    <h1 class="page-title" id="pageTitle">Wishes Wall</h1>
+    <p class="page-sub" id="pageSub">Love, written one card at a time 💕</p>
+    <button class="add-wish-btn" id="addBtn" onclick="toggleForm()">💝 Leave a Wish</button>
+  </div>
+
+  <div class="form-wrap" id="formWrap">
+    <input id="wishName" placeholder="Your name (optional)"/>
+    <textarea id="wishMsg" rows="3" placeholder="Write your birthday wish here…"></textarea>
+    <div class="form-actions">
+      <button class="btn-submit" onclick="submitWish()" id="submitBtnLabel">Add to Wall 💖</button>
+      <button class="btn-cancel" onclick="toggleForm()" id="cancelBtnLabel">Cancel</button>
+    </div>
+  </div>
+
+  <div id="container"></div>
+
+  <script>
+    const music=document.getElementById('bgMusic');
+    music.play().catch(()=>{});
+
+    const starsEl=document.getElementById('stars');
+    for(let i=0;i<50;i++){
+      const s=document.createElement('div'); s.className='star';
+      const sz=.8+Math.random()*2.5;
+      s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;
+        animation-duration:${1.5+Math.random()*3}s;animation-delay:${Math.random()*4}s`;
+      starsEl.appendChild(s);
+    }
+
+    let lang='en', wishes=[];
+    const stamps=['💌','🌸','💝','✨','💖','🌺'];
+
+    const T={
+      en:{title:"Wishes Wall",sub:"Love, written one card at a time 💕",add:"💝 Leave a Wish",
+          namePh:"Your name (optional)",msgPh:"Write your birthday wish here…",
+          submit:"Add to Wall 💖",cancel:"Cancel",you:"You",
+          empty:"No wishes yet… be the first to leave one! 💕",loading:"Loading wishes…"},
+      ta:{title:"வாழ்த்து சுவர்",sub:"ஒவ்வொரு அட்டையிலும் அன்பு எழுதப்பட்டுள்ளது 💕",add:"💝 ஒரு வாழ்த்து விடு",
+          namePh:"உங்கள் பெயர் (விருப்பம்)",msgPh:"உங்கள் பிறந்தநாள் வாழ்த்தை இங்கே எழுதுங்கள்…",
+          submit:"சுவரில் சேர் 💖",cancel:"ரத்து செய்",you:"நீங்கள்",
+          empty:"இன்னும் வாழ்த்துகள் இல்லை… முதலில் ஒன்றை விடுங்கள்! 💕",loading:"வாழ்த்துகள் ஏற்றப்படுகிறது…"}
+    };
+
+    function getLocalWishes(){
+      try{ return JSON.parse(localStorage.getItem('momWishes')||'[]'); }catch(e){ return []; }
+    }
+    function saveLocalWishes(arr){
+      try{ localStorage.setItem('momWishes', JSON.stringify(arr)); }catch(e){}
+    }
+
+    function renderWishes(){
+      document.getElementById('pageTitle').textContent=T[lang].title;
+      document.getElementById('pageSub').textContent=T[lang].sub;
+      document.getElementById('addBtn').textContent=T[lang].add;
+      document.getElementById('wishName').placeholder=T[lang].namePh;
+      document.getElementById('wishMsg').placeholder=T[lang].msgPh;
+      document.getElementById('submitBtnLabel').textContent=T[lang].submit;
+      document.getElementById('cancelBtnLabel').textContent=T[lang].cancel;
+
+      const container=document.getElementById('container');
+      container.innerHTML='';
+
+      const local=getLocalWishes();
+      const all=[...local, ...wishes];
+
+      if(!all.length){
+        container.innerHTML=`<div class="loading-wrap">${T[lang].empty}</div>`;
+        return;
+      }
+
+      all.forEach((w,i)=>{
+        const div=document.createElement('div');
+        div.className='wish-card'+(w.mine?' mine':'');
+        const fromText = w.mine ? (w.from || T[lang].you) : (w.from[lang]||w.from);
+        const msgText = w.mine ? w.message : w.message[lang];
+        div.innerHTML=`
+          <div class="wish-stamp">${stamps[i%stamps.length]}</div>
+          <div class="wish-from">${fromText}${w.mine ? ' 💛' : ''}</div>
+          <div class="wish-msg">${msgText}</div>`;
+        container.appendChild(div);
+        setTimeout(()=>div.classList.add('show'), 100+i*120);
+      });
+    }
+
+    async function loadWishes(){
+      document.getElementById('container').innerHTML=`<div class="loading-wrap">${T[lang].loading}</div>`;
+      try{
+        const res=await fetch('/api/birthday/wishes');
+        wishes=await res.json();
+      }catch(e){ wishes=[]; }
+      renderWishes();
+    }
+
+    function toggleForm(){
+      document.getElementById('formWrap').classList.toggle('show');
+    }
+
+    function submitWish(){
+      const name=document.getElementById('wishName').value.trim();
+      const msg=document.getElementById('wishMsg').value.trim();
+      if(!msg) return;
+      const local=getLocalWishes();
+      local.unshift({ mine:true, from:name||T[lang].you, message:msg });
+      saveLocalWishes(local);
+      document.getElementById('wishName').value='';
+      document.getElementById('wishMsg').value='';
+      toggleForm();
+      renderWishes();
+      burst();
+    }
+
+    function burst(){
+      const items=['💖','🌸','✨','💌','🎀'];
+      for(let i=0;i<24;i++){
+        setTimeout(()=>{
+          const e=document.createElement('div'); e.className='floaty';
+          e.textContent=items[Math.floor(Math.random()*items.length)];
+          e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${16+Math.random()*18}px;
+            animation-duration:${2.5+Math.random()*2}s;`;
+          document.body.appendChild(e); setTimeout(()=>e.remove(),6000);
+        },i*40);
+      }
+    }
+
+    function toggleLang(){
+      lang=lang==='en'?'ta':'en';
+      document.getElementById('langBtn').textContent=lang==='en'?'🌐 தமிழ்':'🌐 English';
+      renderWishes();
+    }
+    function toggleMusic(){
+      music.paused?music.play():music.pause();
+      document.getElementById('musicBtn').textContent=music.paused?'🔇':'🔊';
+    }
+    function goBack(){ window.location.href='/surprice.html'; }
+
+    const emojis=['🌸','💖','✨','💌','🎀','💝','🌷'];
+    function spawnFloat(){
+      const e=document.createElement('div'); e.className='floaty';
+      e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${14+Math.random()*16}px;
+        animation-duration:${6+Math.random()*5}s;`;
+      document.body.appendChild(e); setTimeout(()=>e.remove(),11000);
+    }
+    setInterval(spawnFloat,520);
+
+    loadWishes();
+  </script>
+</body>
+</html>

@@ -35,3 +35,39 @@ exports.getMemories = (req, res, next) => {
     next(err);
   }
 };
+
+exports.getQuiz = (req, res, next) => {
+  try {
+    const data = birthdayService.getQuiz();
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getWishes = (req, res, next) => {
+  try {
+    const data = birthdayService.getWishes();
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getPlaylist = (req, res, next) => {
+  try {
+    const data = birthdayService.getPlaylist();
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getCountdown = (req, res, next) => {
+  try {
+    const data = birthdayService.getCountdown();
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};

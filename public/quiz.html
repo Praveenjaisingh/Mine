@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Mom Quiz 🧠💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --rose:#ff2d78;--coral:#ff6b6b;--peach:#ffb347;--gold:#ffd700;
+      --magenta:#e91e8c;--lavender:#c77dff;--teal:#06d6a0;--sun:#ffd60a;
+      --script:'Dancing Script',cursive;--body:'Nunito',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      min-height:100dvh; overflow-x:hidden;
+      font-family:var(--body); color:white;
+      padding-bottom:60px;
+      display:flex;flex-direction:column;align-items:center;
+      background: radial-gradient(ellipse at 10% 0%,   #06d6a0 0%, transparent 50%),
+                  radial-gradient(ellipse at 90% 10%,  #ffd60a 0%, transparent 45%),
+                  radial-gradient(ellipse at 50% 100%, #ff2d78 0%, transparent 55%),
+                  linear-gradient(160deg,#001a16 0%,#10002a 50%,#1a0010 100%);
+    }
+
+    .back-btn,.lang-btn{
+      position:fixed;top:16px;z-index:300;
+      padding:9px 18px;border:1px solid rgba(255,255,255,.3);border-radius:50px;
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-family:var(--body);font-weight:700;font-size:13px;
+      cursor:pointer;transition:.25s;
+    }
+    .back-btn{left:16px;} .lang-btn{right:16px;}
+    .back-btn:hover,.lang-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05);}
+
+    .music-btn{
+      position:fixed;bottom:20px;right:20px;z-index:300;
+      width:52px;height:52px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-size:22px;cursor:pointer;transition:.25s;
+    }
+    .music-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.08);}
+
+    .page-header{position:relative;z-index:10;text-align:center;padding:90px 20px 24px;}
+    .header-icon{
+      font-size:clamp(52px,14vw,72px);display:block;line-height:1;margin-bottom:8px;
+      animation:iconFloat 3s ease-in-out infinite;
+      filter:drop-shadow(0 0 20px rgba(255,214,10,.6));
+    }
+    @keyframes iconFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+    .page-title{
+      font-family:var(--script);font-size:clamp(30px,8vw,48px);font-weight:700;
+      background:linear-gradient(90deg,#06d6a0,#ffd60a,#ff6b6b,#06d6a0);
+      background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      animation:shimmer 3.5s linear infinite;line-height:1.2;
+    }
+    @keyframes shimmer{to{background-position:200% center}}
+    .page-sub{font-size:14px;opacity:.8;margin-top:6px;font-weight:600;}
+
+    .quiz-wrap{position:relative;z-index:10;width:min(520px,94vw);}
+
+    .panel{
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,255,255,.28);
+      backdrop-filter:blur(24px);
+      border-radius:32px;
+      padding:clamp(26px,6vw,42px) clamp(20px,5vw,34px);
+      box-shadow:0 16px 56px rgba(6,214,160,.22), inset 0 1px 0 rgba(255,255,255,.3);
+      text-align:center;
+      animation:cardIn .7s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes cardIn{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+    .start-btn,.action-btn{
+      display:inline-block; padding:16px 38px; margin-top:8px;
+      background:linear-gradient(135deg,#06d6a0,#ffd60a,#ff6b6b);
+      border:none;border-radius:50px;
+      color:#10002a;font-family:var(--body);font-weight:800;font-size:16px;
+      cursor:pointer;transition:.25s;
+      box-shadow:0 8px 30px rgba(6,214,160,.4);
+    }
+    .start-btn:hover,.action-btn:hover{transform:translateY(-3px) scale(1.03);}
+
+    .progress-label{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.65;margin-bottom:14px;font-weight:700;}
+    .progress-bar{height:6px;border-radius:4px;background:rgba(255,255,255,.15);overflow:hidden;margin-bottom:22px;}
+    .progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#06d6a0,#ffd60a);transition:width .4s ease;}
+
+    .q-text{font-family:var(--script);font-size:clamp(22px,6vw,30px);font-weight:700;line-height:1.4;margin-bottom:22px;color:var(--sun);}
+
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:420px){.options{grid-template-columns:1fr;}}
+
+    .opt-btn{
+      padding:14px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.1);color:white;font-family:var(--body);font-weight:700;font-size:14px;
+      cursor:pointer;transition:.25s;
+    }
+    .opt-btn:hover{background:rgba(255,255,255,.22);transform:translateY(-2px);}
+    .opt-btn.correct{background:rgba(6,214,160,.55);border-color:#06d6a0;}
+    .opt-btn.wrong{background:rgba(255,45,120,.5);border-color:#ff2d78;}
+    .opt-btn[disabled]{cursor:default;}
+
+    .result-emoji{font-size:clamp(60px,16vw,86px);margin-bottom:10px;animation:bounce 1.4s ease-in-out infinite;}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+    .result-score{font-family:var(--script);font-size:clamp(32px,9vw,46px);font-weight:700;color:var(--sun);margin-bottom:8px;}
+    .result-msg{font-size:15px;opacity:.9;line-height:1.7;margin-bottom:20px;}
+
+    .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:6px;}
+    .btn-secondary{
+      padding:14px 28px;border-radius:50px;border:1px solid rgba(255,255,255,.35);
+      background:rgba(255,255,255,.12);color:white;font-family:var(--body);font-weight:700;font-size:14px;cursor:pointer;
+    }
+    .btn-secondary:hover{background:rgba(255,255,255,.22);}
+
+    .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
+    @keyframes floatUp{0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}}
+  </style>
+</head>
+<body>
+
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg"/>
+  </audio>
+
+  <button class="back-btn" onclick="goBack()">← Back</button>
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">🌐 தமிழ்</button>
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
+
+  <div class="page-header">
+    <span class="header-icon">🧠</span>
+    <h1 class="page-title" id="pageTitle">How Well Do You Know Mom?</h1>
+    <p class="page-sub" id="pageSub">A fun little quiz, just for laughs 💕</p>
+  </div>
+
+  <div class="quiz-wrap" id="quizWrap"></div>
+
+  <script>
+    const music=document.getElementById('bgMusic');
+    music.play().catch(()=>{});
+
+    let lang='en', quizData=[], idx=0, score=0, answered=false;
+
+    const T = {
+      en:{ title:"How Well Do You Know Mom?", sub:"A fun little quiz, just for laughs 💕",
+           start:"Let's Begin 🎉", loading:"Loading questions…", question:"Question",
+           of:"of", playAgain:"Play Again 🔁", menu:"Back to Menu",
+           resultTitle:(s,t)=>`You scored ${s} / ${t}!`,
+           resultMsg:"Whatever the score, one thing's certain — you love her endlessly, and she knows it 💖" },
+      ta:{ title:"அம்மாவை எவ்வளவு அறிவீர்கள்?", sub:"வெறும் சந்தோஷத்திற்காக ஒரு சிறிய வினாடி வினா 💕",
+           start:"தொடங்குவோம் 🎉", loading:"கேள்விகள் ஏற்றப்படுகிறது…", question:"கேள்வி",
+           of:"இல்", playAgain:"மீண்டும் விளையாடு 🔁", menu:"மீண்டும் மெனுவுக்கு",
+           resultTitle:(s,t)=>`நீங்கள் பெற்ற மதிப்பெண் ${s} / ${t}!`,
+           resultMsg:"மதிப்பெண் என்னவாக இருந்தாலும், ஒன்று உறுதி — நீங்கள் அவளை எல்லையற்ற அளவு நேசிக்கிறீர்கள், அவளுக்கும் அது தெரியும் 💖" }
+    };
+
+    function renderStart(){
+      document.getElementById('pageTitle').textContent=T[lang].title;
+      document.getElementById('pageSub').textContent=T[lang].sub;
+      document.getElementById('quizWrap').innerHTML=`
+        <div class="panel">
+          <div style="font-size:54px;margin-bottom:10px;">🎉</div>
+          <button class="start-btn" onclick="startQuiz()">${T[lang].start}</button>
+        </div>`;
+    }
+
+    async function startQuiz(){
+      idx=0; score=0; answered=false;
+      document.getElementById('quizWrap').innerHTML=`<div class="panel">${T[lang].loading}</div>`;
+      if(!quizData.length){
+        try{
+          const res=await fetch('/api/birthday/quiz');
+          quizData=await res.json();
+        }catch(e){ quizData=[]; }
+      }
+      renderQuestion();
+    }
+
+    function renderQuestion(){
+      if(!quizData.length){
+        document.getElementById('quizWrap').innerHTML=`<div class="panel">💔</div>`;
+        return;
+      }
+      answered=false;
+      const q=quizData[idx];
+      const pct=Math.round((idx/quizData.length)*100);
+
+      document.getElementById('quizWrap').innerHTML=`
+        <div class="panel">
+          <div class="progress-label">${T[lang].question} ${idx+1} ${T[lang].of} ${quizData.length}</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div class="q-text">${q.question[lang]}</div>
+          <div class="options" id="optionsWrap">
+            ${q.options.map((o,i)=>`<button class="opt-btn" data-i="${i}" onclick="selectOption(${i})">${o[lang]}</button>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    function selectOption(i){
+      if(answered) return;
+      answered=true;
+      const q=quizData[idx];
+      const btns=document.querySelectorAll('#optionsWrap .opt-btn');
+      btns.forEach(b=>b.disabled=true);
+      if(i===q.correctIndex){
+        score++;
+        btns[i].classList.add('correct');
+      } else {
+        btns[i].classList.add('wrong');
+        btns[q.correctIndex].classList.add('correct');
+      }
+      setTimeout(()=>{
+        idx++;
+        if(idx<quizData.length) renderQuestion();
+        else renderResult();
+      },1100);
+    }
+
+    function renderResult(){
+      const total=quizData.length;
+      const emoji = score===total ? '🏆' : score>=total/2 ? '🌸' : '💖';
+      document.getElementById('quizWrap').innerHTML=`
+        <div class="panel">
+          <div class="result-emoji">${emoji}</div>
+          <div class="result-score">${T[lang].resultTitle(score,total)}</div>
+          <p class="result-msg">${T[lang].resultMsg}</p>
+          <div class="btn-row">
+            <button class="action-btn" onclick="startQuiz()">${T[lang].playAgain}</button>
+            <button class="btn-secondary" onclick="goBack()">${T[lang].menu}</button>
+          </div>
+        </div>`;
+      burst();
+    }
+
+    function burst(){
+      const items=['🎉','💖','✨','🌸','🏆','🎊'];
+      for(let i=0;i<50;i++){
+        setTimeout(()=>{
+          const e=document.createElement('div'); e.className='floaty';
+          e.textContent=items[Math.floor(Math.random()*items.length)];
+          e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${18+Math.random()*22}px;
+            animation-duration:${2+Math.random()*2}s;`;
+          document.body.appendChild(e); setTimeout(()=>e.remove(),5000);
+        },i*30);
+      }
+    }
+
+    function toggleLang(){
+      lang = lang==='en' ? 'ta' : 'en';
+      document.getElementById('langBtn').textContent = lang==='en' ? '🌐 தமிழ்' : '🌐 English';
+      if(!quizData.length || (idx===0 && !answered && document.querySelector('.start-btn'))) renderStart();
+      else if(idx<quizData.length) renderQuestion();
+      else renderResult();
+    }
+
+    function toggleMusic(){
+      music.paused ? music.play() : music.pause();
+      document.getElementById('musicBtn').textContent = music.paused ? '🔇' : '🔊';
+    }
+
+    function goBack(){ window.location.href='/surprice.html'; }
+
+    const emojis=['🌸','💖','✨','🧠','🎀','💝','🌟'];
+    function spawnFloat(){
+      const e=document.createElement('div'); e.className='floaty';
+      e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${14+Math.random()*16}px;
+        animation-duration:${6+Math.random()*5}s;`;
+      document.body.appendChild(e); setTimeout(()=>e.remove(),11000);
+    }
+    setInterval(spawnFloat,550);
+
+    renderStart();
+  </script>
+</body>
+</html>

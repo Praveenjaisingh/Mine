@@ -36,3 +36,24 @@ exports.getLetters = () => {
 exports.getMemories = () => {
   return repo.getMemories();
 };
+
+exports.getQuiz = () => {
+  return repo.getQuiz();
+};
+
+exports.getWishes = () => {
+  return repo.getWishes();
+};
+
+exports.getPlaylist = () => {
+  return repo.getPlaylist();
+};
+
+exports.getCountdown = () => {
+  const cfg = repo.getBirthdayConfig();
+  const base = repo.getBaseData();
+  return {
+    name: base.name,
+    birthDate: cfg.birthDate
+  };
+};
