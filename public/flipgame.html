@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Flip & Win 🎁</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --rose:#ff2d78;--coral:#ff6b6b;--peach:#ffb347;--gold:#ffd700;
+      --magenta:#e91e8c;--lavender:#c77dff;--mint:#06ffa5;--sky:#48cae4;
+      --script:'Dancing Script',cursive;--body:'Nunito',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      min-height:100dvh; overflow-x:hidden;
+      font-family:var(--body); color:white;
+      padding-bottom:70px;
+      display:flex;flex-direction:column;align-items:center;
+      background:
+        radial-gradient(ellipse at 15% 0%,  #e91e8c 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 10%, #ffd700 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 100%,#7209b7 0%, transparent 55%),
+        linear-gradient(160deg,#1a0014 0%,#1a0030 50%,#1a0500 100%);
+    }
+
+    .back-btn,.lang-btn{
+      position:fixed;top:16px;z-index:300;
+      padding:9px 18px;border:1px solid rgba(255,255,255,.3);border-radius:50px;
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
+    }
+    .back-btn{left:16px;} .lang-btn{right:16px;}
+    .back-btn:hover,.lang-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05);}
+
+    .page-header{position:relative;z-index:10;text-align:center;padding:88px 20px 10px;}
+    .header-icon{
+      font-size:clamp(46px,12vw,62px);display:block;line-height:1;margin-bottom:4px;
+      animation:iconFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(233,30,140,.6));
+    }
+    @keyframes iconFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+    .page-title{
+      font-family:var(--script);font-size:clamp(26px,7vw,40px);font-weight:700;
+      background:linear-gradient(90deg,#e91e8c,#ffd700,#48cae4,#e91e8c);
+      background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      animation:shimmer 3.5s linear infinite;line-height:1.2;
+    }
+    @keyframes shimmer{to{background-position:200% center}}
+    .page-sub{font-size:13px;opacity:.78;margin-top:4px;font-weight:600;max-width:320px;margin-left:auto;margin-right:auto;}
+
+    /* Prize tracker row */
+    .tracker-row{
+      position:relative;z-index:10;display:flex;gap:8px;justify-content:center;
+      margin:14px 0 6px;flex-wrap:wrap;padding:0 12px;
+    }
+    .tracker-chip{
+      background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);
+      border-radius:18px;padding:8px 10px;min-width:64px;text-align:center;
+      transition:.3s; opacity:.55;
+    }
+    .tracker-chip .t-emoji{font-size:22px;display:block;}
+    .tracker-chip .t-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.8;margin-top:2px;}
+    .tracker-chip .t-dots{display:flex;gap:3px;justify-content:center;margin-top:4px;}
+    .tracker-chip .t-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);}
+    .tracker-chip.won{
+      opacity:1; border-color:var(--gold); background:rgba(255,215,0,.18);
+      box-shadow:0 0 16px rgba(255,215,0,.35);
+    }
+    .tracker-chip.won .t-dots span{background:var(--gold);}
+    .tracker-chip.active{opacity:1;}
+    .tracker-chip.active .t-dots span.filled{background:var(--mint);}
+
+    .status-row{
+      position:relative;z-index:10;display:flex;gap:10px;justify-content:center;margin:6px 0 4px;flex-wrap:wrap;
+    }
+    .status-chip{
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+      border-radius:50px;padding:6px 14px;font-size:12px;font-weight:700;
+      display:flex;align-items:center;gap:6px;
+    }
+
+    .game-wrap{position:relative;z-index:10;width:min(440px,94vw);margin-top:12px;}
+
+    .board{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+    }
+    @media(max-width:360px){.board{grid-template-columns:repeat(3,1fr);}}
+
+    .card{ aspect-ratio:1/1; perspective:700px; cursor:pointer; }
+    .card-inner{
+      position:relative;width:100%;height:100%;
+      transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.8,.3,1.1);
+    }
+    .card.flipped .card-inner,.card.matched .card-inner{transform:rotateY(180deg);}
+    .card.matched{cursor:default;}
+
+    .card-face{
+      position:absolute;inset:0;border-radius:13px;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      backface-visibility:hidden;border:1px solid rgba(255,255,255,.3);
+    }
+    .card-back{
+      background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.06));
+      font-size:clamp(18px,5.5vw,24px);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+    }
+    .card-front{
+      transform:rotateY(180deg);
+      background:rgba(255,255,255,.1);
+      font-size:clamp(22px,7vw,30px);
+      flex-direction:column;gap:2px;
+    }
+    .card-front .item-emoji{font-size:1.5em;}
+    .card.matched .card-front{box-shadow:0 0 0 2px var(--mint) inset, 0 0 18px rgba(6,255,165,.5);}
+
+    .reset-btn{
+      display:block;margin:18px auto 0;padding:12px 30px;border:none;border-radius:50px;
+      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
+      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
+    }
+    .reset-btn:hover{background:rgba(255,255,255,.24);}
+
+    /* Prize toast (per-category win) */
+    .toast{
+      position:fixed;top:78px;left:50%;transform:translateX(-50%) translateY(-30px);
+      z-index:400; width:min(380px,90vw);
+      background:rgba(255,255,255,.16);border:1px solid rgba(255,215,0,.5);
+      backdrop-filter:blur(20px);border-radius:20px;padding:14px 18px;
+      display:flex;align-items:center;gap:12px;
+      box-shadow:0 12px 36px rgba(255,215,0,.3);
+      opacity:0;pointer-events:none;transition:opacity .4s ease, transform .4s ease;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .toast-emoji{font-size:30px;flex:none;}
+    .toast-text{font-size:12.5px;line-height:1.5;font-weight:600;}
+
+    /* Final win overlay */
+    .win-overlay{
+      position:fixed;inset:0;z-index:500;
+      background:rgba(10,0,20,.8);backdrop-filter:blur(6px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;pointer-events:none;transition:opacity .4s ease;
+      padding:20px;
+    }
+    .win-overlay.show{opacity:1;pointer-events:auto;}
+    .win-panel{
+      width:min(440px,92vw);text-align:center;max-height:88vh;overflow-y:auto;
+      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);
+      backdrop-filter:blur(24px);border-radius:32px;
+      padding:clamp(28px,6vw,38px) clamp(20px,5vw,30px);
+      box-shadow:0 20px 60px rgba(255,215,0,.3), inset 0 1px 0 rgba(255,255,255,.3);
+      transform:scale(.85);transition:transform .4s cubic-bezier(.16,1,.3,1);
+    }
+    .win-overlay.show .win-panel{transform:scale(1);}
+    .gift-icon{
+      font-size:clamp(56px,15vw,76px);display:inline-block;margin-bottom:8px;
+      animation:giftBounce 1.2s ease-in-out infinite;
+      filter:drop-shadow(0 0 24px rgba(255,215,0,.7));
+    }
+    @keyframes giftBounce{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(6deg)}}
+    .win-title{
+      font-family:var(--script);font-size:clamp(22px,6vw,28px);font-weight:700;color:var(--gold);
+      margin-bottom:12px;line-height:1.3;
+    }
+    .prize-list{list-style:none;text-align:left;margin-bottom:20px;}
+    .prize-list li{
+      display:flex;align-items:center;gap:10px;font-size:13.5px;line-height:1.6;
+      padding:10px 12px;margin-bottom:8px;background:rgba(255,255,255,.08);
+      border-radius:14px;border:1px solid rgba(255,255,255,.18);
+    }
+    .prize-list .p-emoji{font-size:22px;}
+    .win-close{
+      padding:14px 34px;border:none;border-radius:50px;
+      background:linear-gradient(135deg,#ffd700,#ff2d78,#7209b7);
+      color:white;font-family:var(--body);font-weight:800;font-size:15px;cursor:pointer;transition:.25s;
+      box-shadow:0 8px 28px rgba(255,45,120,.4);
+    }
+    .win-close:hover{transform:translateY(-2px) scale(1.03);}
+
+    .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
+    @keyframes floatUp{0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}}
+    .burst{position:fixed;pointer-events:none;z-index:600;animation:burstUp linear forwards;}
+    @keyframes burstUp{0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}95%{opacity:.85}100%{transform:translateY(-100dvh) rotate(540deg);opacity:0}}
+  </style>
+</head>
+<body>
+
+  <button class="back-btn" onclick="goBack()">← Back</button>
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">🌐 தமிழ்</button>
+
+  <div class="page-header">
+    <span class="header-icon">🎴</span>
+    <h1 class="page-title" id="pageTitle">Flip & Win</h1>
+    <p class="page-sub" id="pageSub">Match all 3 pairs in a category to unlock that gift 🎁</p>
+  </div>
+
+  <div class="tracker-row" id="trackerRow"></div>
+
+  <div class="status-row">
+    <div class="status-chip">🔄 <span id="movesCount">0</span> <span id="movesLabel">Moves</span></div>
+  </div>
+
+  <div class="game-wrap">
+    <div class="board" id="board"></div>
+    <button class="reset-btn" id="resetBtn" onclick="initGame()">🔁 Restart</button>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-emoji" id="toastEmoji">🎉</span>
+    <span class="toast-text" id="toastText"></span>
+  </div>
+
+  <div class="win-overlay" id="winOverlay">
+    <div class="win-panel">
+      <span class="gift-icon">🎁</span>
+      <div class="win-title" id="winTitle">You Won Everything!</div>
+      <ul class="prize-list" id="prizeList"></ul>
+      <button class="win-close" id="winCloseBtn" onclick="closeWin()">Yay! 🥳</button>
+    </div>
+  </div>
+
+  <script>
+    let lang='en';
+    let categories=[]; 
+    let finalMsg=null;
+
+    const T={
+      en:{title:"Flip & Win", sub:"Match all 3 pairs in a category to unlock that gift 🎁",
+          moves:"Moves", restart:"🔁 Restart", close:"Yay! 🥳",
+          toastPrefix:"Category complete!",
+          finalTitle:"You Won Everything, Mom! 🎉"},
+      ta:{title:"புரட்டி வெல்லுங்கள்", sub:"ஒரு பிரிவில் உள்ள 3 ஜோடிகளையும் பொருத்தி அந்த பரிசை திறங்கள் 🎁",
+          moves:"முயற்சிகள்", restart:"🔁 மீண்டும் தொடங்கு", close:"வாவ்! 🥳",
+          toastPrefix:"பிரிவு முடிந்தது!",
+          finalTitle:"நீங்கள் எல்லாவற்றையும் வென்றீர்கள் அம்மா! 🎉"}
+    };
+
+    let deck=[], flipped=[], moves=0, locked=false;
+    let categoryProgress={}; 
+    let wonCategories=new Set();
+
+    function shuffle(arr){
+      const a=[...arr];
+      for(let i=a.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+
+    async function loadData(){
+      try{
+        const [catsRes, finalRes] = await Promise.all([
+          fetch('/api/birthday/prizes'),
+          fetch('/api/birthday/final-message')
+        ]);
+        categories = await catsRes.json();
+        finalMsg = await finalRes.json();
+      }catch(e){
+        categories = [];
+        finalMsg = null;
+      }
+    }
+
+    function renderTracker(){
+      const row=document.getElementById('trackerRow');
+      row.innerHTML='';
+      categories.forEach(cat=>{
+        const progress = categoryProgress[cat.key] || 0;
+        const won = wonCategories.has(cat.key);
+        const chip=document.createElement('div');
+        chip.className='tracker-chip'+(won?' won':(progress>0?' active':''));
+        chip.id='chip-'+cat.key;
+        const dots = cat.items.map((_,i)=>`<span class="${i<progress?'filled':''}"></span>`).join('');
+        chip.innerHTML=`
+          <span class="t-emoji">${won?'✅':cat.emoji}</span>
+          <span class="t-label">${cat.label[lang]}</span>
+          <span class="t-dots">${dots}</span>`;
+        row.appendChild(chip);
+      });
+    }
+
+    function buildDeck(){
+      let cards=[];
+      categories.forEach(cat=>{
+        cat.items.forEach(item=>{
+          cards.push({ catKey:cat.key, emoji:item.emoji, name:item.name[lang] });
+          cards.push({ catKey:cat.key, emoji:item.emoji, name:item.name[lang] });
+        });
+      });
+      return shuffle(cards).map((c,i)=>({ id:i, ...c, isFlipped:false, isMatched:false }));
+    }
+
+    function initGame(){
+      flipped=[]; moves=0; locked=false;
+      categoryProgress={}; wonCategories=new Set();
+      categories.forEach(c=>categoryProgress[c.key]=0);
+      updateStatus();
+      renderTracker();
+
+      deck=buildDeck();
+      const board=document.getElementById('board');
+      board.innerHTML='';
+      deck.forEach(card=>{
+        const el=document.createElement('div');
+        el.className='card';
+        el.id='card-'+card.id;
+        el.onclick=()=>flipCard(card.id);
+        el.innerHTML=`
+          <div class="card-inner">
+            <div class="card-face card-back">🎁</div>
+            <div class="card-face card-front"><span class="item-emoji">${card.emoji}</span></div>
+          </div>`;
+        board.appendChild(el);
+      });
+    }
+
+    function flipCard(id){
+      if(locked) return;
+      const card=deck.find(c=>c.id===id);
+      if(!card || card.isFlipped || card.isMatched) return;
+
+      card.isFlipped=true;
+      document.getElementById('card-'+id).classList.add('flipped');
+      flipped.push(card);
+
+      if(flipped.length===2){
+        moves++; updateStatus();
+        locked=true;
+        const [a,b]=flipped;
+        if(a.emoji===b.emoji && a.catKey===b.catKey){
+          setTimeout(()=>{
+            a.isMatched=true; b.isMatched=true;
+            document.getElementById('card-'+a.id).classList.add('matched');
+            document.getElementById('card-'+b.id).classList.add('matched');
+            flipped=[];
+            locked=false;
+            onPairMatched(a.catKey);
+          },450);
+        } else {
+          setTimeout(()=>{
+            a.isFlipped=false; b.isFlipped=false;
+            document.getElementById('card-'+a.id).classList.remove('flipped');
+            document.getElementById('card-'+b.id).classList.remove('flipped');
+            flipped=[];
+            locked=false;
+          },800);
+        }
+      }
+    }
+
+    function onPairMatched(catKey){
+      categoryProgress[catKey] = (categoryProgress[catKey]||0) + 1;
+      const cat = categories.find(c=>c.key===catKey);
+      renderTracker();
+
+      if(cat && categoryProgress[catKey] >= cat.items.length && !wonCategories.has(catKey)){
+        wonCategories.add(catKey);
+        renderTracker();
+        showToast(cat);
+        miniBurst();
+
+        if(wonCategories.size === categories.length){
+          setTimeout(showFinalWin, 900);
+        }
+      }
+    }
+
+    function showToast(cat){
+      const toast=document.getElementById('toast');
+      document.getElementById('toastEmoji').textContent=cat.emoji;
+      document.getElementById('toastText').textContent=cat.gift[lang];
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t=setTimeout(()=>toast.classList.remove('show'), 3200);
+    }
+
+    function showFinalWin(){
+      document.getElementById('winTitle').textContent = T[lang].finalTitle;
+      const list=document.getElementById('prizeList');
+      list.innerHTML = categories.map(cat=>
+        `<li><span class="p-emoji">${cat.emoji}</span><span>${cat.gift[lang]}</span></li>`
+      ).join('');
+      document.getElementById('winOverlay').classList.add('show');
+      megaBurst();
+    }
+
+    function closeWin(){
+      document.getElementById('winOverlay').classList.remove('show');
+    }
+
+    function updateStatus(){
+      document.getElementById('movesCount').textContent=moves;
+    }
+
+    function miniBurst(){
+      const items=['✨','🎉','⭐'];
+      for(let i=0;i<16;i++){
+        setTimeout(()=>{
+          const e=document.createElement('div'); e.className='burst';
+          e.textContent=items[Math.floor(Math.random()*items.length)];
+          e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${16+Math.random()*16}px;
+            animation-duration:${1.6+Math.random()*1.4}s;`;
+          document.body.appendChild(e); setTimeout(()=>e.remove(),4000);
+        },i*30);
+      }
+    }
+
+    function megaBurst(){
+      const items=['🎉','🎁','💖','✨','🌟','🎊','💝'];
+      for(let i=0;i<60;i++){
+        setTimeout(()=>{
+          const e=document.createElement('div'); e.className='burst';
+          e.textContent=items[Math.floor(Math.random()*items.length)];
+          e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${18+Math.random()*24}px;
+            animation-duration:${2+Math.random()*2}s;`;
+          document.body.appendChild(e); setTimeout(()=>e.remove(),5000);
+        },i*25);
+      }
+    }
+
+    function applyLang(){
+      document.getElementById('pageTitle').textContent=T[lang].title;
+      document.getElementById('pageSub').textContent=T[lang].sub;
+      document.getElementById('movesLabel').textContent=T[lang].moves;
+      document.getElementById('resetBtn').textContent=T[lang].restart;
+      document.getElementById('winCloseBtn').textContent=T[lang].close;
+      renderTracker();
+    }
+
+    function toggleLang(){
+      lang=lang==='en'?'ta':'en';
+      document.getElementById('langBtn').textContent=lang==='en'?'🌐 தமிழ்':'🌐 English';
+      applyLang();
+    }
+
+    function goBack(){ window.location.href='/surprice.html'; }
+
+    const emojis=['🌸','💖','✨','🎀','💝','🎴'];
+    function spawnFloat(){
+      const e=document.createElement('div'); e.className='floaty';
+      e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${14+Math.random()*16}px;
+        animation-duration:${6+Math.random()*5}s;`;
+      document.body.appendChild(e); setTimeout(()=>e.remove(),11000);
+    }
+    setInterval(spawnFloat,650);
+
+    (async function start(){
+      await loadData();
+      if(!categories.length){
+        document.getElementById('board').innerHTML =
+          '<div style="grid-column:1/-1;text-align:center;padding:30px;opacity:.7;">Could not load the game data 💔</div>';
+        return;
+      }
+      applyLang();
+      initGame();
+    })();
+  </script>
+</body>
+</html>

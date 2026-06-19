@@ -11,5 +11,7 @@ router.get("/quiz", birthdayController.getQuiz);
 router.get("/wishes", birthdayController.getWishes);
 router.get("/playlist", birthdayController.getPlaylist);
 router.get("/countdown", birthdayController.getCountdown);
+router.get("/prizes", birthdayController.getPrizeCategories);
+router.get("/final-message", birthdayController.getFinalMessage);
 
 module.exports = router;

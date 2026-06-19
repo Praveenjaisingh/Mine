@@ -57,3 +57,11 @@ exports.getCountdown = () => {
     birthDate: cfg.birthDate
   };
 };
+
+exports.getPrizeCategories = () => {
+  return repo.getPrizeCategories();
+};
+
+exports.getFinalMessage = () => {
+  return repo.getFinalMessage();
+};

@@ -188,7 +188,7 @@
       const daysAlive=Math.floor((now-birthDate)/86400000);
       const weeksAlive=Math.floor(daysAlive/7);
       const minutesAlive=Math.floor((now-birthDate)/60000);
-      const heartbeats=Math.floor(minutesAlive*75); 
+      const heartbeats=Math.floor(minutesAlive*75); // ~75 bpm average, just for fun
       const sunrises=daysAlive;
 
       const ageLine=document.getElementById('ageLine');

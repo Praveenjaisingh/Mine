@@ -71,3 +71,21 @@ exports.getCountdown = (req, res, next) => {
     next(err);
   }
 };
+
+exports.getPrizeCategories = (req, res, next) => {
+  try {
+    const data = birthdayService.getPrizeCategories();
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getFinalMessage = (req, res, next) => {
+  try {
+    const data = birthdayService.getFinalMessage();
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};

@@ -83,7 +83,7 @@ const memories = [
   },
 
   {
-    image: "/images/shared image5.png",
+     image: "/images/shared image5.png",
     caption: {
       en: "Forever memories ❤️",
       ta: "என்றும் மறக்க முடியாத நினைவுகள் ❤️"
@@ -122,8 +122,8 @@ const quiz = [
     question: { en: "What is Mom's favorite festival?", ta: "அம்மாவின் பிடித்த பண்டிகை எது?" },
     options: [
       { en: "Diwali", ta: "தீபாவளி" },
-      { en: "Pongal", ta: "Pongal" },
-      { en: "New Year", ta: "தமிழில் புத்தாண்டு" },
+      { en: "Pongal", ta: "பொங்கல்" },
+      { en: "New Year", ta: "புத்தாண்டு" },
       { en: "Her Birthday 🎂", ta: "அவளுடைய பிறந்தநாள் 🎂" }
     ],
     correctIndex: 0
@@ -131,7 +131,7 @@ const quiz = [
   {
     question: { en: "What dish does Mom make best?", ta: "அம்மா சமைக்கும் சிறந்த உணவு எது?" },
     options: [
-      { en: "Biryani", ta: "Biryani" },
+      { en: "Biryani", ta: "பிரியாணி" },
       { en: "Sambar", ta: "சாம்பார்" },
       { en: "Sweets", ta: "இனிப்புகள்" },
       { en: "Everything! 😋", ta: "எல்லாமே! 😋" }
@@ -198,6 +198,7 @@ const wishes = [
   }
 ];
 
+
 const playlist = [
   {
     title: { en: "Anbe En Anbe", ta: "அன்பே என் அன்பே" },
@@ -206,15 +207,81 @@ const playlist = [
     emoji: "🎻"
   },
   {
-    title: { en: "Vikram Vedha — Love Theme", ta: "Vikram Vedha — Love Theme" },
+    title: { en: "Vikram Vedha — Love Theme", ta: "விக்ரம் வேதா — லவ் தீம்" },
     note: { en: "A beautiful tune for beautiful memories ✨", ta: "அழகான நினைவுகளுக்கான அழகான இசை ✨" },
     src: "/music/Vikram%20Vedha%20Love%20Bgm.mp3",
     emoji: "🎶"
   }
 ];
 
+
 const birthdayConfig = {
-  birthDate: "1977-06-26"
+  birthDate: "1975-01-01"
+};
+
+
+const prizeCategories = [
+  {
+    key: "flowers",
+    emoji: "🌸",
+    label: { en: "Flowers", ta: "பூக்கள்" },
+    items: [
+      { emoji: "🌹", name: { en: "Rose", ta: "ரோஜா" } },
+      { emoji: "🌷", name: { en: "Tulip", ta: "டுலிப்" } },
+      { emoji: "🌻", name: { en: "Sunflower", ta: "சூரியகாந்தி" } }
+    ],
+    gift: {
+      en: "You matched all the Flowers! 🌸 A real bouquet is coming your way!",
+      ta: "நீங்கள் அனைத்து பூக்களையும் பொருத்திவிட்டீர்கள்! 🌸 உண்மையான பூங்கொத்து உங்களுக்காக காத்திருக்கிறது!"
+    }
+  },
+  {
+    key: "fruits",
+    emoji: "🍎",
+    label: { en: "Fruits", ta: "பழங்கள்" },
+    items: [
+      { emoji: "🍎", name: { en: "Apple", ta: "ஆப்பிள்" } },
+      { emoji: "🍇", name: { en: "Grapes", ta: "திராட்சை" } },
+      { emoji: "🍓", name: { en: "Strawberry", ta: "ஸ்ட்ராபெரி" } }
+    ],
+    gift: {
+      en: "You matched all the Fruits! 🍓 A basket of fresh fruits is on its way!",
+      ta: "நீங்கள் அனைத்து பழங்களையும் பொருத்திவிட்டீர்கள்! 🍓 புதிய பழக் கூடை உங்களுக்காக காத்திருக்கிறது!"
+    }
+  },
+  {
+    key: "chocolates",
+    emoji: "🍫",
+    label: { en: "Chocolates", ta: "சாக்லேட்" },
+    items: [
+      { emoji: "🍫", name: { en: "Chocolate Bar", ta: "சாக்லேட் பார்" } },
+      { emoji: "🍪", name: { en: "Cookie", ta: "குக்கீ" } },
+      { emoji: "🧁", name: { en: "Cupcake", ta: "கப்கேக்" } }
+    ],
+    gift: {
+      en: "You matched all the Chocolates! 🍫 Something sweet is waiting for you!",
+      ta: "நீங்கள் அனைத்து சாக்லேட்களையும் பொருத்திவிட்டீர்கள்! 🍫 இனிப்பான ஒன்று உங்களுக்காக காத்திருக்கிறது!"
+    }
+  },
+  {
+    key: "vegetables",
+    emoji: "🥦",
+    label: { en: "Vegetables", ta: "காய்கறிகள்" },
+    items: [
+      { emoji: "🥕", name: { en: "Carrot", ta: "கேரட்" } },
+      { emoji: "🥦", name: { en: "Broccoli", ta: "ப்ரோக்கோலி" } },
+      { emoji: "🌽", name: { en: "Corn", ta: "சோளம்" } }
+    ],
+    gift: {
+      en: "You matched all the Vegetables! 🥦 Fresh veggies are coming your way too!",
+      ta: "நீங்கள் அனைத்து காய்கறிகளையும் பொருத்திவிட்டீர்கள்! 🥦 புதிய காய்கறிகளும் உங்களுக்காக காத்திருக்கின்றன!"
+    }
+  }
+];
+
+const finalMessage = {
+  en: "You matched EVERYTHING, Mom! 🎉 All 4 gifts — flowers, fruits, chocolates & veggies — are yours!",
+  ta: "நீங்கள் எல்லாவற்றையும் பொருத்திவிட்டீர்கள் அம்மா! 🎉 நான்கு பரிசுகளும் — பூக்கள், பழங்கள், சாக்லேட் மற்றும் காய்கறிகள் — உங்களுடையதே!"
 };
 
 exports.getBaseData = () => baseData;
@@ -234,3 +301,7 @@ exports.getWishes = () => wishes;
 exports.getPlaylist = () => playlist;
 
 exports.getBirthdayConfig = () => birthdayConfig;
+
+exports.getPrizeCategories = () => prizeCategories;
+
+exports.getFinalMessage = () => finalMessage;
