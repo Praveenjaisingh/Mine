@@ -83,20 +83,56 @@
     #celebrateBtn::before{content:'';position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.2),transparent);}
     #celebrateBtn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,45,120,.65);}
 
-    .nav-grid{
-      display:grid; grid-template-columns:1fr 1fr;
-      gap:10px; width:100%; margin-top:4px;
-      animation:fadeUp .6s ease both; display:none;
+    .nav-tree{
+      position:relative; width:100%; margin-top:14px; padding:16px 0 4px;
+      display:none;
     }
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .tree-trunk{
+      position:absolute; top:0; bottom:0; left:50%; width:3px;
+      transform:translateX(-50%) scaleY(0); transform-origin:top; border-radius:3px; opacity:.75;
+      background:linear-gradient(180deg,var(--gold),var(--rose),var(--lavender),var(--gold));
+      box-shadow:0 0 10px rgba(255,215,0,.35);
+      transition:transform .8s cubic-bezier(.2,.8,.2,1);
+    }
+    .tree-trunk.grow{ transform:translateX(-50%) scaleY(1); }
+    .branch-row{ position:relative; min-height:58px; margin:8px 0; display:flex; align-items:center; }
+    .branch-row.left  { justify-content:flex-start; }
+    .branch-row.right { justify-content:flex-end; }
 
-    .nav-btn{
-      padding:13px 10px; border:none; border-radius:20px;
-      font-family:var(--body); font-weight:800; font-size:14px;
-      cursor:pointer; transition:.25s;
-      display:flex; align-items:center; justify-content:center; gap:6px;
+    .branch-node{
+      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+      width:32px; height:32px; border-radius:50%;
+      background:rgba(255,255,255,.16); border:2px solid var(--gold);
+      display:flex; align-items:center; justify-content:center; font-size:15px;
+      box-shadow:0 0 14px rgba(255,215,0,.5);
+      z-index:3;
     }
-    .nav-btn:hover{transform:translateY(-3px) scale(1.04);}
+
+    .branch-card{
+      width:calc(50% - 36px);
+      padding:11px 12px; border:none; border-radius:16px;
+      font-family:var(--body); font-weight:800; font-size:13px;
+      cursor:pointer; display:flex; align-items:center; gap:6px;
+      position:relative; opacity:0; transition:transform .25s, box-shadow .25s;
+    }
+    .branch-row.left  .branch-card{ margin-right:auto; transform:translateX(-26px) scale(.5) rotate(-10deg); }
+    .branch-row.right .branch-card{ margin-left:auto;  transform:translateX(26px)  scale(.5) rotate(10deg); }
+
+    .branch-row.left  .branch-card::after{
+      content:''; position:absolute; right:-20px; top:50%; width:20px; height:2px;
+      background:var(--gold); transform:translateY(-50%); opacity:.85;
+    }
+    .branch-row.right .branch-card::after{
+      content:''; position:absolute; left:-20px; top:50%; width:20px; height:2px;
+      background:var(--gold); transform:translateY(-50%); opacity:.85;
+    }
+
+    .branch-card.pop{ animation:branchPop .65s cubic-bezier(.34,1.56,.64,1) forwards; }
+    @keyframes branchPop{
+      0%   { opacity:0; }
+      100% { opacity:1; transform:translateX(0) scale(1) rotate(0deg); }
+    }
+    .branch-card.pop:hover{ transform:translateY(-3px) scale(1.04) !important; }
 
     .btn-letters  {background:linear-gradient(135deg,#ff6b6b,#ffb347);color:#1a0014;}
     .btn-memories {background:linear-gradient(135deg,#c77dff,#74c7ec);color:#1a0014;}
@@ -131,16 +167,45 @@
 
     <button id="celebrateBtn" onclick="celebrate()">🎊 Celebrate!</button>
 
-    <div class="nav-grid" id="navGrid">
-      <button class="nav-btn btn-letters"  onclick="go('letters.html')">💌 Letters</button>
-      <button class="nav-btn btn-memories" onclick="go('memories.html')">📸 Memories</button>
-      <button class="nav-btn btn-reasons"  onclick="go('reasons.html')">❤️ Reasons</button>
-      <button class="nav-btn btn-timeline" onclick="go('timeline.html')">✨ Journey</button>
-      <button class="nav-btn btn-quiz"     onclick="go('quiz.html')">🧠 Mom Quiz</button>
-      <button class="nav-btn btn-wishes"   onclick="go('wishes.html')">💝 Wishes</button>
-      <button class="nav-btn btn-playlist" onclick="go('playlist.html')">🎵 Playlist</button>
-      <button class="nav-btn btn-countdown" onclick="go('countdown.html')">⏳ Countdown</button>
-      <button class="nav-btn btn-flipgame" onclick="go('flipgame.html')">🎴 Flip & Win</button>
+    <div class="nav-tree" id="navGrid">
+      <div class="tree-trunk"></div>
+
+      <div class="branch-row left">
+        <button class="branch-card btn-letters" onclick="go('letters.html')">💌 Letters</button>
+        <div class="branch-node">💌</div>
+      </div>
+      <div class="branch-row right">
+        <div class="branch-node">📸</div>
+        <button class="branch-card btn-memories" onclick="go('memories.html')">📸 Memories</button>
+      </div>
+      <div class="branch-row left">
+        <button class="branch-card btn-reasons" onclick="go('reasons.html')">❤️ Reasons</button>
+        <div class="branch-node">❤️</div>
+      </div>
+      <div class="branch-row right">
+        <div class="branch-node">✨</div>
+        <button class="branch-card btn-timeline" onclick="go('timeline.html')">✨ Journey</button>
+      </div>
+      <div class="branch-row left">
+        <button class="branch-card btn-quiz" onclick="go('quiz.html')">🧠 Mom Quiz</button>
+        <div class="branch-node">🧠</div>
+      </div>
+      <div class="branch-row right">
+        <div class="branch-node">💝</div>
+        <button class="branch-card btn-wishes" onclick="go('wishes.html')">💝 Wishes</button>
+      </div>
+      <div class="branch-row left">
+        <button class="branch-card btn-playlist" onclick="go('playlist.html')">🎵 Playlist</button>
+        <div class="branch-node">🎵</div>
+      </div>
+      <div class="branch-row right">
+        <div class="branch-node">⏳</div>
+        <button class="branch-card btn-countdown" onclick="go('countdown.html')">⏳ Countdown</button>
+      </div>
+      <div class="branch-row left">
+        <button class="branch-card btn-flipgame" onclick="go('flipgame.html')">🎴 Flip & Win</button>
+        <div class="branch-node">🎴</div>
+      </div>
     </div>
   </div>
 
@@ -196,9 +261,31 @@
       document.getElementById('celebrateBtn').style.display='none';
       burst();
       setTimeout(()=>{
-        document.getElementById('navGrid').style.display='grid';
+        const navGrid = document.getElementById('navGrid');
+        navGrid.style.display='block';
+        navGrid.querySelector('.tree-trunk').classList.add('grow');
+        const cards = navGrid.querySelectorAll('.branch-card');
+        cards.forEach((card, i) => {
+          setTimeout(() => {
+            card.classList.add('pop');
+            popFizz(card);
+          }, 250 + i * 130);
+        });
         setInterval(spawn,250);
       },1000);
+    }
+
+    function popFizz(btn){
+      const rect = btn.getBoundingClientRect();
+      const items=['✨','💫','⭐'];
+      for(let i=0;i<5;i++){
+        const e=document.createElement('div'); e.className='floaty';
+        e.textContent=items[Math.floor(Math.random()*items.length)];
+        e.style.cssText=`left:${rect.left+rect.width/2+(Math.random()*40-20)}px;
+          top:${rect.top+rect.height/2}px;bottom:auto;font-size:${10+Math.random()*8}px;
+          animation-duration:${.8+Math.random()*.6}s;`;
+        document.body.appendChild(e); setTimeout(()=>e.remove(),1500);
+      }
     }
 
     function burst(){
