@@ -34,6 +34,15 @@
     .back-btn{left:16px;} .lang-btn{right:16px;}
     .back-btn:hover,.lang-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05);}
 
+    .music-btn{
+      position:fixed;bottom:20px;right:20px;z-index:300;
+      width:52px;height:52px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.3);
+      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
+      color:white;font-size:22px;cursor:pointer;transition:.25s;
+    }
+    .music-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.08);}
+
     .page-header{position:relative;z-index:10;text-align:center;padding:88px 20px 10px;}
     .header-icon{
       font-size:clamp(46px,12vw,62px);display:block;line-height:1;margin-bottom:4px;
@@ -186,8 +195,13 @@
 </head>
 <body>
 
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram%20Vedha%20Love%20Bgm.mp3" type="audio/mpeg"/>
+  </audio>
+
   <button class="back-btn" onclick="goBack()">← Back</button>
   <button class="lang-btn" id="langBtn" onclick="toggleLang()">🌐 தமிழ்</button>
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔊</button>
 
   <div class="page-header">
     <span class="header-icon">🎴</span>
@@ -221,6 +235,9 @@
   </div>
 
   <script>
+    const music=document.getElementById('bgMusic');
+    music.play().catch(()=>{});
+
     let lang='en';
     let categories=[]; 
     let finalMsg=null;
@@ -435,7 +452,15 @@
       applyLang();
     }
 
-    function goBack(){ window.location.href='/surprice.html'; }
+    function toggleMusic(){
+      music.paused ? music.play() : music.pause();
+      document.getElementById('musicBtn').textContent = music.paused ? '🔇' : '🔊';
+    }
+
+    function goBack(){
+      music.pause();
+      window.location.href='/surprice.html';
+    }
 
     const emojis=['🌸','💖','✨','🎀','💝','🎴'];
     function spawnFloat(){
