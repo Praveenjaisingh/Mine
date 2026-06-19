@@ -57,11 +57,31 @@
     }
     .ribbon-line{flex:1;height:1px;background:rgba(255,255,255,.35);}
 
-    .big-cake{
-      font-size:clamp(64px,16vw,88px); line-height:1;
+    .cake-wrap{
+      position:relative; width:clamp(64px,16vw,88px); height:clamp(58px,14vw,80px);
+      margin:0 auto 12px; display:flex; align-items:center; justify-content:center;
       animation:cakeBounce 2s ease-in-out infinite;
+    }
+    .cake-half{
+      position:absolute; font-size:clamp(64px,16vw,88px); line-height:1;
       filter:drop-shadow(0 0 20px rgba(255,215,0,.6));
-      display:block; margin-bottom:12px;
+      transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+    }
+    .cake-left{ clip-path:inset(0 50% 0 0); }
+    .cake-right{ clip-path:inset(0 0 0 50%); }
+    .cake-wrap.cut{ animation:none; }
+    .cake-wrap.cut .cake-left{  transform:translate(-14px,2px) rotate(-7deg); }
+    .cake-wrap.cut .cake-right{ transform:translate(14px,2px) rotate(7deg); }
+    .knife-icon{
+      position:absolute; font-size:clamp(28px,8vw,38px); opacity:0;
+      transform:rotate(38deg); filter:drop-shadow(0 4px 8px rgba(0,0,0,.4));
+    }
+    .cake-wrap.cut .knife-icon{ animation:knifeCut .7s ease forwards; }
+    @keyframes knifeCut{
+      0%  { left:-36px; top:-36px; opacity:0; }
+      12% { opacity:1; }
+      55% { left:46%;   top:42%;  }
+      100%{ left:140%;  top:-40px; opacity:0; }
     }
     @keyframes cakeBounce{
       0%,100%{transform:translateY(0) scale(1)}
@@ -159,8 +179,44 @@
       95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}
     }
   </style>
+<style id="pt-style">
+.pt-overlay{
+  position:fixed; inset:0; z-index:9999;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  background:radial-gradient(ellipse at 50% 40%, rgba(199,125,255,.28), transparent 60%),
+             linear-gradient(160deg,rgba(26,0,20,.94),rgba(45,0,48,.94) 50%,rgba(26,10,34,.94));
+  opacity:0; pointer-events:none; transition:opacity .25s ease;
+  backdrop-filter:blur(8px);
+}
+.pt-overlay.show{ opacity:1; pointer-events:all; }
+.pt-cake{ position:relative; width:80px; height:72px; display:flex; align-items:center; justify-content:center; }
+.pt-cake-half{ position:absolute; font-size:56px; line-height:1; filter:drop-shadow(0 0 12px rgba(255,215,0,.55)); transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+.pt-cake-left{ clip-path:inset(0 50% 0 0); }
+.pt-cake-right{ clip-path:inset(0 0 0 50%); }
+.pt-overlay.show .pt-cake-left{ transform:translate(-9px,1px) rotate(-7deg); }
+.pt-overlay.show .pt-cake-right{ transform:translate(9px,1px) rotate(7deg); }
+.pt-knife{ position:absolute; font-size:26px; opacity:0; transform:rotate(38deg); }
+.pt-overlay.show .pt-knife{ animation:ptKnife .6s ease forwards; }
+@keyframes ptKnife{
+  0%{ left:-30px; top:-30px; opacity:0; }
+  15%{ opacity:1; }
+  55%{ left:50%; top:46%; }
+  100%{ left:120%; top:-30px; opacity:0; }
+}
+.pt-caption{ font-family:'Dancing Script',cursive; font-size:16px; font-weight:700; color:#ffd700; letter-spacing:.5px;
+  text-shadow:0 0 10px rgba(255,45,120,.5); opacity:.95; }
+</style>
 </head>
 <body>
+  <div class="pt-overlay" id="ptOverlay">
+    <div class="pt-cake">
+      <div class="pt-cake-half pt-cake-left">🎂</div>
+      <div class="pt-cake-half pt-cake-right">🎂</div>
+      <div class="pt-knife">🔪</div>
+    </div>
+    <p class="pt-caption">Just a moment, love…</p>
+  </div>
+
   <div class="particles" id="particles"></div>
 
   <audio id="bgMusic" loop>
@@ -174,7 +230,11 @@
       <div class="ribbon-line"></div>
     </div>
 
-    <span class="big-cake">🎂</span>
+    <div class="cake-wrap" id="cakeWrap">
+      <div class="cake-half cake-left">🎂</div>
+      <div class="cake-half cake-right">🎂</div>
+      <div class="knife-icon" id="knifeIcon">🔪</div>
+    </div>
 
     <h1>Birthday Surprise!</h1>
     <p class="tagline">Something special is waiting for you 💝</p>
@@ -218,8 +278,27 @@
 
     function showLogin(){
       music.play().catch(()=>{});
+      const cakeWrap = document.getElementById('cakeWrap');
+      cakeWrap.classList.add('cut');
+      burstSparkles();
       document.getElementById('startBtn').style.display='none';
-      document.getElementById('loginBox').style.display='block';
+      setTimeout(()=>{
+        document.getElementById('loginBox').style.display='block';
+      }, 550);
+    }
+
+    function burstSparkles(){
+      const bits=['✨','🍰','💛','🎊'];
+      const card=document.getElementById('card').getBoundingClientRect();
+      const cx=card.left+card.width/2, cy=card.top+120;
+      for(let i=0;i<14;i++){
+        const s=document.createElement('div'); s.className='confetti-heart';
+        s.textContent=bits[Math.floor(Math.random()*bits.length)];
+        const dx=(Math.random()*160-80);
+        s.style.cssText=`left:${cx+dx}px; top:${cy}px; font-size:${16+Math.random()*14}px;
+          animation-duration:${.7+Math.random()*.6}s; animation-delay:${Math.random()*.2}s`;
+        document.body.appendChild(s); setTimeout(()=>s.remove(),1500);
+      }
     }
 
     async function unlock(){
@@ -237,7 +316,7 @@
         if(data.success){
           msgEl.textContent='🎉 Welcome, Princess!'; msgEl.className='success';
           burstHearts();
-          setTimeout(()=>{ window.location.href='/surprice.html'; },900);
+          setTimeout(()=>{ goNav('/surprice.html'); },900);
         } else {
           msgEl.textContent=data.message||'💔 Try again, my love~';
           msgEl.className='error';
@@ -262,5 +341,13 @@
       }
     }
   </script>
+<script>
+  function goNav(url){
+    var ov = document.getElementById('ptOverlay');
+    if(!ov){ window.location.href = url; return; }
+    ov.classList.add('show');
+    setTimeout(function(){ window.location.href = url; }, 620);
+  }
+</script>
 </body>
 </html>
