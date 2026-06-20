@@ -87,6 +87,50 @@
 
     .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
     @keyframes floatUp{0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}}
+
+    .wish-overlay{
+      position:fixed; inset:0; z-index:9000;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px;
+      background:radial-gradient(ellipse at 50% 40%, rgba(255,123,0,.25), transparent 60%),
+                 linear-gradient(160deg,rgba(20,5,0,.95),rgba(30,0,40,.95) 50%,rgba(0,16,32,.95));
+      opacity:0; pointer-events:none; transition:opacity .35s ease;
+      backdrop-filter:blur(10px);
+    }
+    .wish-overlay.show{ opacity:1; pointer-events:all; }
+
+    .wish-heart-wrap{ position:relative; width:160px; height:150px; display:flex; align-items:center; justify-content:center; }
+    .wish-heart{
+      font-size:130px; line-height:1;
+      filter:drop-shadow(0 0 30px rgba(255,45,120,.65));
+      animation:wishBeat 1.1s ease-in-out infinite;
+    }
+    @keyframes wishBeat{0%,100%{transform:scale(1)}25%{transform:scale(1.14)}40%{transform:scale(.96)}55%{transform:scale(1.1)}}
+
+    .wish-spark{
+      position:absolute; font-size:18px; opacity:0;
+      animation:wishSpark 1.8s ease-in-out infinite;
+    }
+    @keyframes wishSpark{
+      0%{opacity:0; transform:translateY(0) scale(.5);}
+      30%{opacity:1;}
+      100%{opacity:0; transform:translateY(-46px) scale(1.1);}
+    }
+
+    .wish-msg-box{
+      min-height:54px; width:min(360px,86vw); text-align:center; padding:0 10px;
+    }
+    .wish-msg{
+      font-family:var(--script); font-size:clamp(20px,5.5vw,26px); font-weight:700;
+      color:#ffd700; text-shadow:0 0 14px rgba(255,123,0,.55);
+      opacity:0; transform:translateY(8px);
+      transition:opacity .35s ease, transform .35s ease;
+    }
+    .wish-msg.show{ opacity:1; transform:translateY(0); }
+
+    .wish-dots{ display:flex; gap:7px; }
+    .wish-dot{ width:7px;height:7px;border-radius:50%; background:rgba(255,255,255,.4); animation:wishDot 1.2s ease-in-out infinite; }
+    .wish-dot:nth-child(2){animation-delay:.15s;} .wish-dot:nth-child(3){animation-delay:.3s;}
+    @keyframes wishDot{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
   </style>
 <style id="pt-style">
 .pt-overlay{
@@ -126,6 +170,21 @@
     <p class="pt-caption">Just a moment, love…</p>
   </div>
 
+  <div class="wish-overlay" id="wishOverlay">
+    <div class="wish-heart-wrap">
+      <span class="wish-heart">💖</span>
+      <span class="wish-spark" style="left:6px;top:18px;animation-delay:0s;">✨</span>
+      <span class="wish-spark" style="right:2px;top:30px;animation-delay:.6s;">⭐</span>
+      <span class="wish-spark" style="left:50%;top:0;transform:translateX(-50%);animation-delay:1.1s;">💫</span>
+    </div>
+    <div class="wish-msg-box"><p class="wish-msg" id="wishMsg"></p></div>
+    <div class="wish-dots"><span class="wish-dot"></span><span class="wish-dot"></span><span class="wish-dot"></span></div>
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg"/>
+  </audio>
+
 
   <button class="back-btn" onclick="goBack()">← Back</button>
   <button class="lang-btn" id="langBtn" onclick="toggleLang()">🌐 தமிழ்</button>
@@ -142,19 +201,21 @@
 
   <script>
     let lang='en', birthDate=null;
+    const music=document.getElementById('bgMusic');
+    music.play().catch(()=>{});
 
     const T={
       en:{title:"Countdown to Mom's Day", sub:"Every second with you is worth counting 💛",
           nextLabel:"Time until her next birthday", days:"Days",hours:"Hours",mins:"Mins",secs:"Secs",
           ageLabel:(y)=>`She has beautifully lived ${y} years`,
           daysAlive:"Days Alive",weeksAlive:"Weeks Alive",heartbeats:"Heartbeats of Love",sunrises:"Sunrises Seen",
-          note:"(just for fun, with all our love!)",
+          note:"(Full of love and care!)",
           wish:"Make a Wish ✨"},
       ta:{title:"அம்மாவின் நாளுக்கான கவுண்ட்டவுன்", sub:"உங்களுடன் கடக்கும் ஒவ்வொரு கணமும் மதிப்புமிக்கது 💛",
-          nextLabel:"அடுத்த பிறந்தநாள் வரை மீதமுள்ள நேரம்", days:"நாட்கள்",hours:"மணி",mins:"நிமிடம்",secs:"வினாடி",
+          nextLabel:"அடுத்த பிறந்தநாள் வரை மீதமுள்ள நேரம்", days:"நாட்கள்",hours:"மணி",mins:"நிமிடம்",secs:"நொடிகள்",
           ageLabel:(y)=>`அவள் அழகாக ${y} வயது வாழ்ந்திருக்கிறாள்`,
-          daysAlive:"வாழ்ந்த நாட்கள்",weeksAlive:"வாழ்ந்த வாரங்கள்",heartbeats:"அன்பின் இதயத்துடிப்புகள்",sunrises:"பார்த்த சூரிய உதயங்கள்",
-          note:"(வெறும் வேடிக்கைக்காக, எங்கள் அன்புடன்!)",
+          daysAlive:"உயிரோடு இருக்கும் நாட்கள்",weeksAlive:"உயிரோடு இருக்கும் வாரங்கள்",heartbeats:"அன்பின் இதயத்துடிப்புகள்",sunrises:"சூரிய உதயம்",
+          note:"(அன்பும் அக்கறையும் நிறைந்த!)",
           wish:"ஒரு விருப்பத்தை கேள் ✨"}
     };
 
@@ -224,7 +285,7 @@
       const daysAlive=Math.floor((now-birthDate)/86400000);
       const weeksAlive=Math.floor(daysAlive/7);
       const minutesAlive=Math.floor((now-birthDate)/60000);
-      const heartbeats=Math.floor(minutesAlive*75); // ~75 bpm average, just for fun
+      const heartbeats=Math.floor(minutesAlive*75); 
       const sunrises=daysAlive;
 
       const ageLine=document.getElementById('ageLine');
@@ -240,7 +301,52 @@
       }
     }
 
+    const wishMessages={
+      en:[
+        "Sending this wish straight to the stars ✨",
+        "You are loved more than words can say 💛",
+        "May every dream of yours come true 🌸",
+        "Thank you for everything you are to us 💕",
+        "Here's to many more beautiful years, Amma 🎂"
+      ],
+      ta:[
+        "இந்த விருப்பத்தை நட்சத்திரங்களுக்கு அனுப்புகிறேன் ✨",
+        "நீங்கள் எல்லாவற்றிற்கும் மேலாக நேசிக்கப்படுகிறீர்கள் 💛",
+        "உங்கள் கனவுகள் அனைத்தும் நிறைவேறட்டும் 🌸",
+        "நீங்கள் எங்களுக்கு செய்த அனைத்திற்கும் நன்றி 💕",
+        "இன்னும் பல அழகான ஆண்டுகள், அம்மா 🎂"
+      ]
+    };
+
     function makeWish(){
+      music.play().catch(()=>{});
+      const overlay=document.getElementById('wishOverlay');
+      const msgEl=document.getElementById('wishMsg');
+      const msgs=wishMessages[lang]||wishMessages.en;
+
+      overlay.classList.add('show');
+      let i=0;
+      const showMsg=(idx)=>{
+        msgEl.classList.remove('show');
+        setTimeout(()=>{
+          msgEl.textContent=msgs[idx];
+          msgEl.classList.add('show');
+        },280);
+      };
+      showMsg(0);
+      const cycle=setInterval(()=>{
+        i=(i+1)%msgs.length;
+        showMsg(i);
+      },1500);
+
+      setTimeout(()=>{
+        clearInterval(cycle);
+        overlay.classList.remove('show');
+        setTimeout(sparkleBurst, 350);
+      }, msgs.length*1500 + 300);
+    }
+
+    function sparkleBurst(){
       const items=['✨','🌟','💫','🎉','💖','🌸'];
       for(let i=0;i<40;i++){
         setTimeout(()=>{
@@ -258,7 +364,7 @@
       document.getElementById('langBtn').textContent=lang==='en'?'🌐 தமிழ்':'🌐 English';
       renderPanel();
     }
-    function goBack(){ goNav('/surprice.html'); }
+    function goBack(){ music.pause(); goNav('/surprice.html'); }
 
     const emojis=['✨','🌟','💛','🎈','🌸'];
     function spawnFloat(){

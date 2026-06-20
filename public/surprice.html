@@ -288,9 +288,25 @@
     }
     setInterval(spawn,450);
 
+    const CELEBRATED_KEY='bdayCelebrated';
     let celebrated=false;
+
+    function showFinalState(){
+      celebrated=true;
+      const cake=document.getElementById('cake');
+      cake.style.animation='none';
+      cake.textContent='🍰'; cake.classList.add('cut');
+      document.getElementById('celebrateBtn').style.display='none';
+      const navGrid = document.getElementById('navGrid');
+      navGrid.style.display='block';
+      navGrid.querySelector('.tree-trunk').classList.add('grow');
+      navGrid.querySelectorAll('.branch-card').forEach(card=>card.classList.add('pop'));
+      setInterval(spawn,250);
+    }
+
     function celebrate(){
       if(celebrated) return; celebrated=true;
+      sessionStorage.setItem(CELEBRATED_KEY,'1');
       music.play().catch(()=>{});
       const cake=document.getElementById('cake');
       cake.textContent='🍰'; cake.classList.add('cut');
@@ -309,6 +325,11 @@
         });
         setInterval(spawn,250);
       },1000);
+    }
+
+
+    if(sessionStorage.getItem(CELEBRATED_KEY)==='1'){
+      showFinalState();
     }
 
     function popFizz(btn){
