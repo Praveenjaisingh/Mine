@@ -81,10 +81,13 @@
     .ring{
       width:100%;height:100%;
       transform-style:preserve-3d;
+      will-change:transform;
       animation:orbitSpin 22s linear infinite;
+      animation-play-state:paused; /* stays paused until cards are actually rendered */
     }
     @keyframes orbitSpin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
     .ring:hover{animation-play-state:paused;}
+    .ring.spin:hover{animation-play-state:paused;}
 
     .mem-card{
       position:absolute; width:clamp(100px,26vw,140px); height:clamp(130px,33vw,175px);
@@ -155,7 +158,7 @@
   </div>
 
   <audio id="bgMusic" loop>
-    <source src="/music/Vikram Vedha Love Bgm.mp3" type="audio/mpeg"/>
+    <source src="/music/Sachin Movie Bgm.mp3" type="audio/mpeg"/>
   </audio>
 
   <button class="back-btn" onclick="goBack()">← Back</button>
@@ -188,7 +191,12 @@
 
     async function loadMemories(){
       try{
-        const res=await fetch('/api/birthday/memories');
+        // Don't let a slow/hanging API leave the ring empty & spinning forever.
+        // Give it 2.5s, then fall back to placeholders so the user always sees motion fast.
+        const controller=new AbortController();
+        const timeout=setTimeout(()=>controller.abort(), 2500);
+        const res=await fetch('/api/birthday/memories', {signal:controller.signal});
+        clearTimeout(timeout);
         memories=await res.json();
       } catch(e){
         memories=[
@@ -205,6 +213,8 @@
 
     function renderRing(){
       const ring=document.getElementById('ring');
+      ring.classList.remove('spin');
+      ring.style.animationPlayState='paused'; // freeze while we rebuild children
       ring.innerHTML='';
       const total=memories.length;
       const isMobile=window.innerWidth<600;
@@ -222,6 +232,14 @@
           card.innerHTML=`<div class="mem-placeholder">${m.emoji||'💖'}</div><div class="caption">${m.caption[lang]}</div>`;
         }
         ring.appendChild(card);
+      });
+
+      // Let the browser paint the new cards first, then start rotation cleanly
+      // on the next frame — avoids the "snap into mid-rotation" lag/stutter.
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          ring.style.animationPlayState='running';
+        });
       });
     }
 

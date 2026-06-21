@@ -211,6 +211,87 @@ const playlist = [
     note: { en: "A beautiful tune for beautiful memories ✨", ta: "அழகான நினைவுகளுக்கான அழகான இசை ✨" },
     src: "/music/Vikram%20Vedha%20Love%20Bgm.mp3",
     emoji: "🎶"
+  },
+  {
+    title: { en: "2K's Tamil Love BGM", ta: "2K's தமிழ் காதல் BGM" },
+    note: {
+      en: "A nostalgic collection of romantic vibes from the golden era ❤️",
+      ta: "பழைய காதல் நினைவுகளை மீட்டெடுக்கும் இனிய காதல் இசை ❤️"
+    },
+    src: "/music/2ks Tamil Love Bgm.mp3",
+    emoji: "💞"
+  },
+  {
+    title: { en: "Dude Love Theme", ta: "டூட் காதல் தீம்" },
+    note: {
+      en: "A youthful and heartwarming melody filled with affection ✨",
+      ta: "இளமையும் இனிய காதல் உணர்வுகளும் கலந்த மென்மையான இசை ✨"
+    },
+    src: "/music/Dude Love Bgm.mp3",
+    emoji: "🥰"
+  },
+  {
+    title: { en: "Dheema", ta: "தீமா" },
+    note: {
+      en: "A soothing romantic tune that gently touches the heart 💖",
+      ta: "மனதை மெதுவாக வருடும் இனிய காதல் இசை 💖"
+    },
+    src: "/music/Love Insurance Kompany - Dheema Song Bgm.mp3",
+    emoji: "🌸"
+  },
+  {
+    title: { en: "Mariyan Love Theme", ta: "மரியான் காதல் தீம்" },
+    note: {
+      en: "A soulful melody that expresses deep love and longing 🌊",
+      ta: "ஆழமான காதலும் ஏக்கமும் நிறைந்த உணர்வுப்பூர்வ இசை 🌊"
+    },
+    src: "/music/Mariyan Love BGM.mp3",
+    emoji: "💙"
+  },
+  {
+    title: { en: "Pookkal Pookkum", ta: "Pookkal Pookkum" },
+    note: {
+      en: "A timeless romantic classic blooming with emotions 🌺",
+      ta: "காதல் உணர்வுகள் மலரும் காலத்தால் அழியாத மெலடி 🌺"
+    },
+    src: "/music/Pookkal Pookkum Song Bgm.mp3",
+    emoji: "🌷"
+  },
+  {
+    title: { en: "Sachin Love Theme", ta: "சச்சின் காதல் தீம்" },
+    note: {
+      en: "A cheerful melody capturing the excitement of first love 😊",
+      ta: "முதல் காதலின் இனிய பரவசத்தை உணர்த்தும் இசை 😊"
+    },
+    src: "/music/Sachin Movie Bgm.mp3",
+    emoji: "💘"
+  },
+  {
+    title: { en: "The Love Bug Has Bitten", ta: "லவ் பக் ஹாஸ் பிட்டன்" },
+    note: {
+      en: "A playful romantic tune full of sweet crush moments 🦋",
+      ta: "காதல் தொடங்கும் இனிய தருணங்களை நினைவூட்டும் இசை 🦋"
+    },
+    src: "/music/The Love Bug Has Bitten - Remo Bgm.mp3",
+    emoji: "🦋"
+  },
+  {
+    title: { en: "Theri Love Theme", ta: "தெறி காதல் தீம்" },
+    note: {
+      en: "A heartfelt melody reflecting pure and enduring love ❤️‍🔥",
+      ta: "தூய்மையான மற்றும் நிலையான காதலை வெளிப்படுத்தும் இசை ❤️‍🔥"
+    },
+    src: "/music/Theri Love Bgm.mp3",
+    emoji: "❤️"
+  },
+  {
+    title: { en: "Vaarayo Vaarayo", ta: "Vaarayo Vaarayo" },
+    note: {
+      en: "A dreamy romantic melody that beautifully captures the magic of falling in love 💖",
+      ta: "காதலில் விழும் இனிய தருணங்களின் மாயையை அழகாக வெளிப்படுத்தும் கனவான காதல் மெலடி 💖"
+    },
+    src: "/music/Varayo Varayo Bgm.mp3",
+    emoji: "🌹"
   }
 ];
 
