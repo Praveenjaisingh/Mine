@@ -292,7 +292,17 @@ const playlist = [
     },
     src: "/music/Varayo Varayo Bgm.mp3",
     emoji: "🌹"
+  },
+  {
+    title: { en: "Love BGM", ta: "காதல் பின்னணி இசை" },
+    note: {
+      en: "A beautiful romantic background melody that fills every moment with love, warmth, and heartfelt emotions 💖",
+      ta: "ஒவ்வொரு தருணத்தையும் காதல், அன்பு மற்றும் இனிய உணர்வுகளால் நிரப்பும் அழகான காதல் பின்னணி இசை 💖"
+    },
+    src: "/music/24 Love Bgm.mp3",
+    emoji: "🌹"
   }
+
 ];
 
 

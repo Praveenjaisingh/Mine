@@ -68,6 +68,32 @@
     .show-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 40px rgba(255,45,120,.65);}
     .hint{margin-top:12px;font-size:13px;opacity:.55;letter-spacing:1px;}
 
+    /* ===== Stage behind the ring: soft rotating color glow + sparkle field ===== */
+    .stage-glow{
+      position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+      width:min(120vw,900px);height:min(120vw,900px);
+      pointer-events:none;z-index:5;opacity:0;transition:opacity 1s ease;
+      background:conic-gradient(from 0deg,
+        rgba(255,45,120,.35),rgba(255,179,71,.3),rgba(199,125,255,.32),
+        rgba(33,158,188,.3),rgba(255,45,120,.35));
+      filter:blur(60px);
+      animation:glowSpin 14s linear infinite;
+    }
+    .stage-glow.active{opacity:1;}
+    @keyframes glowSpin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+
+    .sparkle-field{position:fixed;inset:0;pointer-events:none;z-index:6;}
+    .sparkle{
+      position:absolute;border-radius:50%;
+      background:radial-gradient(circle,#fff 0%,var(--gold) 45%,transparent 70%);
+      animation:twinkle 2.2s ease-in-out infinite;
+      opacity:0;
+    }
+    @keyframes twinkle{
+      0%,100%{opacity:0;transform:scale(.3);}
+      50%{opacity:1;transform:scale(1);}
+    }
+
     .scene{
       position:fixed;top:50%;left:50%;
       transform:translate(-50%,-50%);
@@ -82,10 +108,14 @@
       width:100%;height:100%;
       transform-style:preserve-3d;
       will-change:transform;
-      animation:orbitSpin 22s linear infinite;
+      animation:orbitSpin 22s linear infinite, ringBob 5.5s ease-in-out infinite;
       animation-play-state:paused; /* stays paused until cards are actually rendered */
     }
     @keyframes orbitSpin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+    @keyframes ringBob{
+      0%,100%{margin-top:0;}
+      50%{margin-top:-10px;}
+    }
     .ring:hover{animation-play-state:paused;}
     .ring.spin:hover{animation-play-state:paused;}
 
@@ -99,18 +129,50 @@
       border:1px solid rgba(255,255,255,.3);
       backdrop-filter:blur(10px);
       box-shadow:0 8px 24px rgba(0,0,0,.4);
-      cursor:pointer; transition:.3s;
+      cursor:pointer; transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, border-color .35s ease;
+      animation:cardPulse 3.6s ease-in-out infinite;
+      animation-delay:var(--pulse-delay,0s);
     }
-    .mem-card:hover{box-shadow:0 12px 36px rgba(255,45,120,.5);}
+    @keyframes cardPulse{
+      0%,100%{box-shadow:0 8px 24px rgba(0,0,0,.4);border-color:rgba(255,255,255,.3);}
+      50%{box-shadow:0 8px 30px rgba(255,45,120,.45),0 0 18px rgba(255,215,0,.25);border-color:rgba(255,215,0,.55);}
+    }
+    .mem-card:hover{
+      transform:scale(1.12) translateZ(20px);
+      box-shadow:0 14px 44px rgba(255,45,120,.6),0 0 26px rgba(255,215,0,.4);
+      border-color:var(--gold);
+      z-index:5;
+    }
     .mem-card img{width:100%;height:72%;object-fit:cover;display:block;}
     .mem-card .caption{
       padding:6px 8px; font-size:clamp(10px,2.5vw,12px); text-align:center;
       line-height:1.4; opacity:.95; font-weight:600;
     }
 
+    /* shimmering sweep across each card, like light catching glass */
+    .mem-card::after{
+      content:'';position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);
+      background-size:250% 250%;
+      background-position:200% 0;
+      animation:cardSheen 4.5s ease-in-out infinite;
+      animation-delay:var(--sheen-delay,0s);
+      mix-blend-mode:overlay;
+    }
+    @keyframes cardSheen{
+      0%,30%{background-position:200% 0;}
+      60%,100%{background-position:-50% 0;}
+    }
+
     .mem-placeholder{
       display:flex;flex-direction:column;align-items:center;justify-content:center;
       height:72%; font-size:clamp(28px,8vw,40px); gap:4px;
+      animation:emojiFloat 2.8s ease-in-out infinite;
+      animation-delay:var(--pulse-delay,0s);
+    }
+    @keyframes emojiFloat{
+      0%,100%{transform:translateY(0) scale(1);}
+      50%{transform:translateY(-4px) scale(1.08);}
     }
 
     .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
@@ -158,7 +220,7 @@
   </div>
 
   <audio id="bgMusic" loop>
-    <source src="/music/Sachin Movie Bgm.mp3" type="audio/mpeg"/>
+    <source src="/music/24 Love Bgm.mp3" type="audio/mpeg"/>
   </audio>
 
   <button class="back-btn" onclick="goBack()">← Back</button>
@@ -170,6 +232,9 @@
     <button class="show-btn" onclick="start()">📸 Show Memories</button>
     <div class="hint">Hover to pause the ring ✨</div>
   </div>
+
+  <div class="stage-glow" id="stageGlow"></div>
+  <div class="sparkle-field" id="sparkleField"></div>
 
   <div class="scene" id="scene">
     <div class="ring" id="ring"></div>
@@ -186,7 +251,24 @@
       document.getElementById('hero').style.opacity='0';
       setTimeout(()=>{ document.getElementById('hero').style.display='none'; },500);
       document.getElementById('scene').classList.add('active');
+      document.getElementById('stageGlow').classList.add('active');
+      spawnSparkles();
       loadMemories();
+    }
+
+    function spawnSparkles(){
+      const field=document.getElementById('sparkleField');
+      const count=window.innerWidth<600?16:28;
+      for(let i=0;i<count;i++){
+        const s=document.createElement('div');
+        s.className='sparkle';
+        const size=2+Math.random()*4;
+        s.style.cssText=`width:${size}px;height:${size}px;
+          left:${Math.random()*100}vw;top:${Math.random()*100}vh;
+          animation-duration:${1.6+Math.random()*2.4}s;
+          animation-delay:${Math.random()*3}s;`;
+        field.appendChild(s);
+      }
     }
 
     async function loadMemories(){
@@ -225,6 +307,10 @@
         const card=document.createElement('div');
         card.className='mem-card';
         card.style.transform=`rotateY(${angle}deg) translateZ(${radius}px)`;
+        // stagger each card's ambient pulse/sheen so the ring shimmers rather than
+        // pulsing all at once like a flashing sign
+        card.style.setProperty('--pulse-delay', (i*0.35)+'s');
+        card.style.setProperty('--sheen-delay', (i*0.5)+'s');
 
         if(m.image){
           card.innerHTML=`<img src="${m.image}" alt="memory"/><div class="caption">${m.caption[lang]}</div>`;
