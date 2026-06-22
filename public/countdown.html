@@ -1,165 +1,522 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Countdown ⏳</title>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap"
+    rel="stylesheet" />
   <style>
-    :root{
-      --rose:#ff2d78;--coral:#ff6b6b;--peach:#ffb347;--gold:#ffd700;
-      --magenta:#e91e8c;--lavender:#c77dff;--sunset:#ff7b00;--skyblue:#48cae4;
-      --script:'Dancing Script',cursive;--body:'Nunito',sans-serif;
+    :root {
+      --rose: #ff2d78;
+      --coral: #ff6b6b;
+      --peach: #ffb347;
+      --gold: #ffd700;
+      --magenta: #e91e8c;
+      --lavender: #c77dff;
+      --sunset: #ff7b00;
+      --skyblue: #48cae4;
+      --script: 'Dancing Script', cursive;
+      --body: 'Nunito', sans-serif;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    body{
-      min-height:100dvh; overflow-x:hidden;
-      font-family:var(--body); color:white;
-      padding-bottom:70px;
-      display:flex;flex-direction:column;align-items:center;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      min-height: 100dvh;
+      overflow-x: hidden;
+      font-family: var(--body);
+      color: white;
+      padding-bottom: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       background:
-        radial-gradient(ellipse at 10% 0%,  #ff7b00 0%, transparent 50%),
-        radial-gradient(ellipse at 90% 100%,#48cae4 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 0%, #ff7b00 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 100%, #48cae4 0%, transparent 50%),
         radial-gradient(ellipse at 50% 50%, #ff2d78 0%, transparent 45%),
-        linear-gradient(160deg,#1a0a00 0%,#1a0030 50%,#001020 100%);
+        linear-gradient(160deg, #1a0a00 0%, #1a0030 50%, #001020 100%);
     }
 
-    .back-btn,.lang-btn{
-      position:fixed;top:16px;z-index:300;
-      padding:9px 18px;border:1px solid rgba(255,255,255,.3);border-radius:50px;
-      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
-      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
-    }
-    .back-btn{left:16px;} .lang-btn{right:16px;}
-    .back-btn:hover,.lang-btn:hover{background:rgba(255,255,255,.3);transform:scale(1.05);}
-
-    .page-header{position:relative;z-index:10;text-align:center;padding:90px 20px 16px;}
-    .header-icon{
-      font-size:clamp(52px,14vw,72px);display:block;line-height:1;margin-bottom:8px;
-      animation:iconFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(255,123,0,.6));
-    }
-    @keyframes iconFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
-    .page-title{
-      font-family:var(--script);font-size:clamp(30px,8vw,48px);font-weight:700;
-      background:linear-gradient(90deg,#ff7b00,#ffd700,#48cae4,#ff7b00);
-      background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      animation:shimmer 3.5s linear infinite;line-height:1.2;
-    }
-    @keyframes shimmer{to{background-position:200% center}}
-    .page-sub{font-size:14px;opacity:.78;margin-top:6px;font-weight:600;}
-
-    .panel{
-      position:relative;z-index:10;width:min(560px,94vw);margin-top:10px;
-      background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.26);
-      backdrop-filter:blur(24px);border-radius:32px;
-      padding:clamp(26px,6vw,38px) clamp(20px,5vw,32px);
-      box-shadow:0 16px 56px rgba(255,123,0,.22), inset 0 1px 0 rgba(255,255,255,.3);
-      text-align:center;
+    .back-btn,
+    .lang-btn {
+      position: fixed;
+      top: 16px;
+      z-index: 300;
+      padding: 9px 18px;
+      border: 1px solid rgba(255, 255, 255, .3);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, .18);
+      backdrop-filter: blur(12px);
+      color: white;
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: .25s;
     }
 
-    .countdown-label{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.65;margin-bottom:14px;font-weight:700;}
-    .countdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:8px;}
-    .cd-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:18px;padding:14px 4px;}
-    .cd-num{font-family:var(--script);font-size:clamp(24px,7vw,34px);font-weight:700;color:var(--gold);}
-    .cd-unit{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:.7;margin-top:2px;}
-
-    .stats-grid{
-      display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px;
-    }
-    @media(max-width:420px){.stats-grid{grid-template-columns:1fr;}}
-    .stat-card{
-      background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
-      border-radius:20px;padding:18px 14px;text-align:center;
-    }
-    .stat-emoji{font-size:26px;margin-bottom:6px;}
-    .stat-num{font-family:var(--script);font-size:clamp(20px,5vw,26px);font-weight:700;color:var(--skyblue);}
-    .stat-label{font-size:11px;opacity:.7;margin-top:4px;line-height:1.4;}
-    .stat-note{grid-column:1/-1;font-size:11px;opacity:.5;margin-top:4px;}
-
-    .wish-btn{
-      margin-top:26px;padding:16px 38px;border:none;border-radius:50px;
-      background:linear-gradient(135deg,#ff7b00,#ffd700,#ff2d78);
-      color:#1a0a00;font-family:var(--body);font-weight:800;font-size:16px;cursor:pointer;
-      box-shadow:0 8px 30px rgba(255,123,0,.4);transition:.25s;
-    }
-    .wish-btn:hover{transform:translateY(-3px) scale(1.03);}
-
-    .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
-    @keyframes floatUp{0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}}
-
-    .wish-overlay{
-      position:fixed; inset:0; z-index:9000;
-      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px;
-      background:radial-gradient(ellipse at 50% 40%, rgba(255,123,0,.25), transparent 60%),
-                 linear-gradient(160deg,rgba(20,5,0,.95),rgba(30,0,40,.95) 50%,rgba(0,16,32,.95));
-      opacity:0; pointer-events:none; transition:opacity .35s ease;
-      backdrop-filter:blur(10px);
-    }
-    .wish-overlay.show{ opacity:1; pointer-events:all; }
-
-    .wish-heart-wrap{ position:relative; width:160px; height:150px; display:flex; align-items:center; justify-content:center; }
-    .wish-heart{
-      font-size:130px; line-height:1;
-      filter:drop-shadow(0 0 30px rgba(255,45,120,.65));
-      animation:wishBeat 1.1s ease-in-out infinite;
-    }
-    @keyframes wishBeat{0%,100%{transform:scale(1)}25%{transform:scale(1.14)}40%{transform:scale(.96)}55%{transform:scale(1.1)}}
-
-    .wish-spark{
-      position:absolute; font-size:18px; opacity:0;
-      animation:wishSpark 1.8s ease-in-out infinite;
-    }
-    @keyframes wishSpark{
-      0%{opacity:0; transform:translateY(0) scale(.5);}
-      30%{opacity:1;}
-      100%{opacity:0; transform:translateY(-46px) scale(1.1);}
+    .back-btn {
+      left: 16px;
     }
 
-    .wish-msg-box{
-      min-height:54px; width:min(360px,86vw); text-align:center; padding:0 10px;
+    .lang-btn {
+      right: 16px;
     }
-    .wish-msg{
-      font-family:var(--script); font-size:clamp(20px,5.5vw,26px); font-weight:700;
-      color:#ffd700; text-shadow:0 0 14px rgba(255,123,0,.55);
-      opacity:0; transform:translateY(8px);
-      transition:opacity .35s ease, transform .35s ease;
-    }
-    .wish-msg.show{ opacity:1; transform:translateY(0); }
 
-    .wish-dots{ display:flex; gap:7px; }
-    .wish-dot{ width:7px;height:7px;border-radius:50%; background:rgba(255,255,255,.4); animation:wishDot 1.2s ease-in-out infinite; }
-    .wish-dot:nth-child(2){animation-delay:.15s;} .wish-dot:nth-child(3){animation-delay:.3s;}
-    @keyframes wishDot{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+    .back-btn:hover,
+    .lang-btn:hover {
+      background: rgba(255, 255, 255, .3);
+      transform: scale(1.05);
+    }
+
+    .page-header {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 90px 20px 16px;
+    }
+
+    .header-icon {
+      font-size: clamp(52px, 14vw, 72px);
+      display: block;
+      line-height: 1;
+      margin-bottom: 8px;
+      animation: iconFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(255, 123, 0, .6));
+    }
+
+    @keyframes iconFloat {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-4deg)
+      }
+
+      50% {
+        transform: translateY(-12px) rotate(4deg)
+      }
+    }
+
+    .page-title {
+      font-family: var(--script);
+      font-size: clamp(30px, 8vw, 48px);
+      font-weight: 700;
+      background: linear-gradient(90deg, #ff7b00, #ffd700, #48cae4, #ff7b00);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3.5s linear infinite;
+      line-height: 1.2;
+    }
+
+    @keyframes shimmer {
+      to {
+        background-position: 200% center
+      }
+    }
+
+    .page-sub {
+      font-size: 14px;
+      opacity: .78;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .panel {
+      position: relative;
+      z-index: 10;
+      width: min(560px, 94vw);
+      margin-top: 10px;
+      background: rgba(255, 255, 255, .11);
+      border: 1px solid rgba(255, 255, 255, .26);
+      backdrop-filter: blur(24px);
+      border-radius: 32px;
+      padding: clamp(26px, 6vw, 38px) clamp(20px, 5vw, 32px);
+      box-shadow: 0 16px 56px rgba(255, 123, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .3);
+      text-align: center;
+    }
+
+    .countdown-label {
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: .65;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .cd-box {
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .25);
+      border-radius: 18px;
+      padding: 14px 4px;
+    }
+
+    .cd-num {
+      font-family: var(--script);
+      font-size: clamp(24px, 7vw, 34px);
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .cd-unit {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: .7;
+      margin-top: 2px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    @media(max-width:420px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, .09);
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 20px;
+      padding: 18px 14px;
+      text-align: center;
+    }
+
+    .stat-emoji {
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    .stat-num {
+      font-family: var(--script);
+      font-size: clamp(20px, 5vw, 26px);
+      font-weight: 700;
+      color: var(--skyblue);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      opacity: .7;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .stat-note {
+      grid-column: 1/-1;
+      font-size: 11px;
+      opacity: .5;
+      margin-top: 4px;
+    }
+
+    .wish-btn {
+      margin-top: 26px;
+      padding: 16px 38px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #ff7b00, #ffd700, #ff2d78);
+      color: #1a0a00;
+      font-family: var(--body);
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(255, 123, 0, .4);
+      transition: .25s;
+    }
+
+    .wish-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    .floaty {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1;
+      animation: floatUp linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0);
+        opacity: 0
+      }
+
+      5% {
+        opacity: 1
+      }
+
+      95% {
+        opacity: .8
+      }
+
+      100% {
+        transform: translateY(-115dvh) rotate(720deg);
+        opacity: 0
+      }
+    }
+
+    .wish-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      background: radial-gradient(ellipse at 50% 40%, rgba(255, 123, 0, .25), transparent 60%),
+        linear-gradient(160deg, rgba(20, 5, 0, .95), rgba(30, 0, 40, .95) 50%, rgba(0, 16, 32, .95));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .wish-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .wish-heart-wrap {
+      position: relative;
+      width: 160px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wish-heart {
+      font-size: 130px;
+      line-height: 1;
+      filter: drop-shadow(0 0 30px rgba(255, 45, 120, .65));
+      animation: wishBeat 1.1s ease-in-out infinite;
+    }
+
+    @keyframes wishBeat {
+
+      0%,
+      100% {
+        transform: scale(1)
+      }
+
+      25% {
+        transform: scale(1.14)
+      }
+
+      40% {
+        transform: scale(.96)
+      }
+
+      55% {
+        transform: scale(1.1)
+      }
+    }
+
+    .wish-spark {
+      position: absolute;
+      font-size: 18px;
+      opacity: 0;
+      animation: wishSpark 1.8s ease-in-out infinite;
+    }
+
+    @keyframes wishSpark {
+      0% {
+        opacity: 0;
+        transform: translateY(0) scale(.5);
+      }
+
+      30% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-46px) scale(1.1);
+      }
+    }
+
+    .wish-msg-box {
+      min-height: 54px;
+      width: min(360px, 86vw);
+      text-align: center;
+      padding: 0 10px;
+    }
+
+    .wish-msg {
+      font-family: var(--script);
+      font-size: clamp(20px, 5.5vw, 26px);
+      font-weight: 700;
+      color: #ffd700;
+      text-shadow: 0 0 14px rgba(255, 123, 0, .55);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .wish-msg.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .wish-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .wish-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .4);
+      animation: wishDot 1.2s ease-in-out infinite;
+    }
+
+    .wish-dot:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .wish-dot:nth-child(3) {
+      animation-delay: .3s;
+    }
+
+    @keyframes wishDot {
+
+      0%,
+      100% {
+        opacity: .3;
+        transform: scale(.8)
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.15)
+      }
+    }
   </style>
-<style id="pt-style">
-.pt-overlay{
-  position:fixed; inset:0; z-index:9999;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
-  background:radial-gradient(ellipse at 50% 40%, rgba(199,125,255,.28), transparent 60%),
-             linear-gradient(160deg,rgba(26,0,20,.94),rgba(45,0,48,.94) 50%,rgba(26,10,34,.94));
-  opacity:0; pointer-events:none; transition:opacity .25s ease;
-  backdrop-filter:blur(8px);
-}
-.pt-overlay.show{ opacity:1; pointer-events:all; }
-.pt-cake{ position:relative; width:80px; height:72px; display:flex; align-items:center; justify-content:center; }
-.pt-cake-half{ position:absolute; font-size:56px; line-height:1; filter:drop-shadow(0 0 12px rgba(255,215,0,.55)); transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
-.pt-cake-left{ clip-path:inset(0 50% 0 0); }
-.pt-cake-right{ clip-path:inset(0 0 0 50%); }
-.pt-overlay.show .pt-cake-left{ transform:translate(-9px,1px) rotate(-7deg); }
-.pt-overlay.show .pt-cake-right{ transform:translate(9px,1px) rotate(7deg); }
-.pt-knife{ position:absolute; font-size:26px; opacity:0; transform:rotate(38deg); }
-.pt-overlay.show .pt-knife{ animation:ptKnife .6s ease forwards; }
-@keyframes ptKnife{
-  0%{ left:-30px; top:-30px; opacity:0; }
-  15%{ opacity:1; }
-  55%{ left:50%; top:46%; }
-  100%{ left:120%; top:-30px; opacity:0; }
-}
-.pt-caption{ font-family:'Dancing Script',cursive; font-size:16px; font-weight:700; color:#ffd700; letter-spacing:.5px;
-  text-shadow:0 0 10px rgba(255,45,120,.5); opacity:.95; }
-</style>
+  <style id="pt-style">
+    .pt-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: radial-gradient(ellipse at 50% 40%, rgba(199, 125, 255, .28), transparent 60%),
+        linear-gradient(160deg, rgba(26, 0, 20, .94), rgba(45, 0, 48, .94) 50%, rgba(26, 10, 34, .94));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .pt-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .pt-cake {
+      position: relative;
+      width: 80px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pt-cake-half {
+      position: absolute;
+      font-size: 56px;
+      line-height: 1;
+      filter: drop-shadow(0 0 12px rgba(255, 215, 0, .55));
+      transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .pt-cake-left {
+      clip-path: inset(0 50% 0 0);
+    }
+
+    .pt-cake-right {
+      clip-path: inset(0 0 0 50%);
+    }
+
+    .pt-overlay.show .pt-cake-left {
+      transform: translate(-9px, 1px) rotate(-7deg);
+    }
+
+    .pt-overlay.show .pt-cake-right {
+      transform: translate(9px, 1px) rotate(7deg);
+    }
+
+    .pt-knife {
+      position: absolute;
+      font-size: 26px;
+      opacity: 0;
+      transform: rotate(38deg);
+    }
+
+    .pt-overlay.show .pt-knife {
+      animation: ptKnife .6s ease forwards;
+    }
+
+    @keyframes ptKnife {
+      0% {
+        left: -30px;
+        top: -30px;
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      55% {
+        left: 50%;
+        top: 46%;
+      }
+
+      100% {
+        left: 120%;
+        top: -30px;
+        opacity: 0;
+      }
+    }
+
+    .pt-caption {
+      font-family: 'Dancing Script', cursive;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffd700;
+      letter-spacing: .5px;
+      text-shadow: 0 0 10px rgba(255, 45, 120, .5);
+      opacity: .95;
+    }
+  </style>
 </head>
+
 <body>
   <div class="pt-overlay" id="ptOverlay">
     <div class="pt-cake">
@@ -177,12 +534,15 @@
       <span class="wish-spark" style="right:2px;top:30px;animation-delay:.6s;">⭐</span>
       <span class="wish-spark" style="left:50%;top:0;transform:translateX(-50%);animation-delay:1.1s;">💫</span>
     </div>
-    <div class="wish-msg-box"><p class="wish-msg" id="wishMsg"></p></div>
-    <div class="wish-dots"><span class="wish-dot"></span><span class="wish-dot"></span><span class="wish-dot"></span></div>
+    <div class="wish-msg-box">
+      <p class="wish-msg" id="wishMsg"></p>
+    </div>
+    <div class="wish-dots"><span class="wish-dot"></span><span class="wish-dot"></span><span class="wish-dot"></span>
+    </div>
   </div>
 
   <audio id="bgMusic" loop>
-    <source src="/music/2ks Tamil Love Bgm.mp3" type="audio/mpeg"/>
+    <source src="/music/2ks Tamil Love Bgm.mp3" type="audio/mpeg" />
   </audio>
 
 
@@ -200,40 +560,44 @@
   </div>
 
   <script>
-    let lang='en', birthDate=null;
-    const music=document.getElementById('bgMusic');
-    music.play().catch(()=>{});
+    let lang = 'en', birthDate = null;
+    const music = document.getElementById('bgMusic');
+    music.play().catch(() => { });
 
-    const T={
-      en:{title:"Countdown to Mom's Day", sub:"Every second with you is worth counting 💛",
-          nextLabel:"Time until her next birthday", days:"Days",hours:"Hours",mins:"Mins",secs:"Secs",
-          ageLabel:(y)=>`She has beautifully lived ${y} years`,
-          daysAlive:"Days Alive",weeksAlive:"Weeks Alive",heartbeats:"Heartbeats of Love",sunrises:"Sunrises Seen",
-          note:"(Full of love and care!)",
-          wish:"Make a Wish ✨"},
-      ta:{title:"அம்மாவின் நாளுக்கான கவுண்ட்டவுன்", sub:"உங்களுடன் கடக்கும் ஒவ்வொரு கணமும் மதிப்புமிக்கது 💛",
-          nextLabel:"அடுத்த பிறந்தநாள் வரை மீதமுள்ள நேரம்", days:"நாட்கள்",hours:"மணி",mins:"நிமிடம்",secs:"நொடிகள்",
-          ageLabel:(y)=>`அவள் அழகாக ${y} வயது வாழ்ந்திருக்கிறாள்`,
-          daysAlive:"உயிரோடு இருக்கும் நாட்கள்",weeksAlive:"உயிரோடு இருக்கும் வாரங்கள்",heartbeats:"அன்பின் இதயத்துடிப்புகள்",sunrises:"சூரிய உதயம்",
-          note:"(அன்பும் அக்கறையும் நிறைந்த!)",
-          wish:"ஒரு விருப்பத்தை கேள் ✨"}
+    const T = {
+      en: {
+        title: "Countdown to Mom's Day", sub: "Every second with you is worth counting 💛",
+        nextLabel: "Time until her next birthday", days: "Days", hours: "Hours", mins: "Mins", secs: "Secs",
+        ageLabel: (y) => `She has beautifully lived ${y} years`,
+        daysAlive: "Days Alive", weeksAlive: "Weeks Alive", heartbeats: "Heartbeats of Love", sunrises: "Sunrises Seen",
+        note: "(Full of love and care!)",
+        wish: "Make a Wish ✨"
+      },
+      ta: {
+        title: "அம்மாவின் நாளுக்கான கவுண்ட்டவுன்", sub: "உங்களுடன் கடக்கும் ஒவ்வொரு கணமும் மதிப்புமிக்கது 💛",
+        nextLabel: "அடுத்த பிறந்தநாள் வரை மீதமுள்ள நேரம்", days: "நாட்கள்", hours: "மணி", mins: "நிமிடம்", secs: "நொடிகள்",
+        ageLabel: (y) => `அவள் அழகாக ${y} வயது வாழ்ந்திருக்கிறாள்`,
+        daysAlive: "உயிரோடு இருக்கும் நாட்கள்", weeksAlive: "உயிரோடு இருக்கும் வாரங்கள்", heartbeats: "அன்பின் இதயத்துடிப்புகள்", sunrises: "சூரிய உதயம்",
+        note: "(அன்பும் அக்கறையும் நிறைந்த!)",
+        wish: "ஒரு விருப்பத்தை கேள் ✨"
+      }
     };
 
-    async function loadConfig(){
-      try{
-        const res=await fetch('/api/birthday/countdown');
-        const data=await res.json();
-        birthDate=new Date(data.birthDate);
-      }catch(e){ birthDate=new Date('1975-01-01'); }
+    async function loadConfig() {
+      try {
+        const res = await fetch('/api/birthday/countdown');
+        const data = await res.json();
+        birthDate = new Date(data.birthDate);
+      } catch (e) { birthDate = new Date('1975-01-01'); }
       renderPanel();
-      setInterval(tick,1000);
+      setInterval(tick, 1000);
       tick();
     }
 
-    function renderPanel(){
-      document.getElementById('pageTitle').textContent=T[lang].title;
-      document.getElementById('pageSub').textContent=T[lang].sub;
-      document.getElementById('panel').innerHTML=`
+    function renderPanel() {
+      document.getElementById('pageTitle').textContent = T[lang].title;
+      document.getElementById('pageSub').textContent = T[lang].sub;
+      document.getElementById('panel').innerHTML = `
         <div class="countdown-label" id="cdLabel">${T[lang].nextLabel}</div>
         <div class="countdown-grid">
           <div class="cd-box"><div class="cd-num" id="numDays">0</div><div class="cd-unit">${T[lang].days}</div></div>
@@ -255,61 +619,61 @@
       tick();
     }
 
-    function tick(){
-      if(!birthDate) return;
-      const now=new Date();
+    function tick() {
+      if (!birthDate) return;
+      const now = new Date();
 
-      let years=now.getFullYear()-birthDate.getFullYear();
+      let years = now.getFullYear() - birthDate.getFullYear();
       const hadBirthdayThisYear =
-        (now.getMonth()>birthDate.getMonth()) ||
-        (now.getMonth()===birthDate.getMonth() && now.getDate()>=birthDate.getDate());
-      if(!hadBirthdayThisYear) years--;
+        (now.getMonth() > birthDate.getMonth()) ||
+        (now.getMonth() === birthDate.getMonth() && now.getDate() >= birthDate.getDate());
+      if (!hadBirthdayThisYear) years--;
 
-      let nextBday=new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-      if(nextBday < now) nextBday=new Date(now.getFullYear()+1, birthDate.getMonth(), birthDate.getDate());
+      let nextBday = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+      if (nextBday < now) nextBday = new Date(now.getFullYear() + 1, birthDate.getMonth(), birthDate.getDate());
 
-      const diff=nextBday-now;
-      const d=Math.floor(diff/86400000);
-      const h=Math.floor((diff%86400000)/3600000);
-      const m=Math.floor((diff%3600000)/60000);
-      const s=Math.floor((diff%60000)/1000);
+      const diff = nextBday - now;
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
 
-      const elNumDays=document.getElementById('numDays');
-      if(elNumDays){
-        elNumDays.textContent=d;
-        document.getElementById('numHours').textContent=h;
-        document.getElementById('numMins').textContent=m;
-        document.getElementById('numSecs').textContent=s;
+      const elNumDays = document.getElementById('numDays');
+      if (elNumDays) {
+        elNumDays.textContent = d;
+        document.getElementById('numHours').textContent = h;
+        document.getElementById('numMins').textContent = m;
+        document.getElementById('numSecs').textContent = s;
       }
 
-      const daysAlive=Math.floor((now-birthDate)/86400000);
-      const weeksAlive=Math.floor(daysAlive/7);
-      const minutesAlive=Math.floor((now-birthDate)/60000);
-      const heartbeats=Math.floor(minutesAlive*75); 
-      const sunrises=daysAlive;
+      const daysAlive = Math.floor((now - birthDate) / 86400000);
+      const weeksAlive = Math.floor(daysAlive / 7);
+      const minutesAlive = Math.floor((now - birthDate) / 60000);
+      const heartbeats = Math.floor(minutesAlive * 75);
+      const sunrises = daysAlive;
 
-      const ageLine=document.getElementById('ageLine');
-      if(ageLine) ageLine.textContent=T[lang].ageLabel(years);
+      const ageLine = document.getElementById('ageLine');
+      if (ageLine) ageLine.textContent = T[lang].ageLabel(years);
 
-      const fmt=n=>n.toLocaleString();
-      const daysAliveEl=document.getElementById('daysAlive');
-      if(daysAliveEl){
-        daysAliveEl.textContent=fmt(daysAlive);
-        document.getElementById('weeksAlive').textContent=fmt(weeksAlive);
-        document.getElementById('heartbeats').textContent=fmt(heartbeats);
-        document.getElementById('sunrises').textContent=fmt(sunrises);
+      const fmt = n => n.toLocaleString();
+      const daysAliveEl = document.getElementById('daysAlive');
+      if (daysAliveEl) {
+        daysAliveEl.textContent = fmt(daysAlive);
+        document.getElementById('weeksAlive').textContent = fmt(weeksAlive);
+        document.getElementById('heartbeats').textContent = fmt(heartbeats);
+        document.getElementById('sunrises').textContent = fmt(sunrises);
       }
     }
 
-    const wishMessages={
-      en:[
+    const wishMessages = {
+      en: [
         "Sending this wish straight to the stars ✨",
         "You are loved more than words can say 💛",
         "May every dream of yours come true 🌸",
         "Thank you for everything you are to us 💕",
         "Here's to many more beautiful years, Amma 🎂"
       ],
-      ta:[
+      ta: [
         "இந்த விருப்பத்தை நட்சத்திரங்களுக்கு அனுப்புகிறேன் ✨",
         "நீங்கள் எல்லாவற்றிற்கும் மேலாக நேசிக்கப்படுகிறீர்கள் 💛",
         "உங்கள் கனவுகள் அனைத்தும் நிறைவேறட்டும் 🌸",
@@ -318,73 +682,74 @@
       ]
     };
 
-    function makeWish(){
-      music.play().catch(()=>{});
-      const overlay=document.getElementById('wishOverlay');
-      const msgEl=document.getElementById('wishMsg');
-      const msgs=wishMessages[lang]||wishMessages.en;
+    function makeWish() {
+      music.play().catch(() => { });
+      const overlay = document.getElementById('wishOverlay');
+      const msgEl = document.getElementById('wishMsg');
+      const msgs = wishMessages[lang] || wishMessages.en;
 
       overlay.classList.add('show');
-      let i=0;
-      const showMsg=(idx)=>{
+      let i = 0;
+      const showMsg = (idx) => {
         msgEl.classList.remove('show');
-        setTimeout(()=>{
-          msgEl.textContent=msgs[idx];
+        setTimeout(() => {
+          msgEl.textContent = msgs[idx];
           msgEl.classList.add('show');
-        },280);
+        }, 280);
       };
       showMsg(0);
-      const cycle=setInterval(()=>{
-        i=(i+1)%msgs.length;
+      const cycle = setInterval(() => {
+        i = (i + 1) % msgs.length;
         showMsg(i);
-      },1500);
+      }, 1500);
 
-      setTimeout(()=>{
+      setTimeout(() => {
         clearInterval(cycle);
         overlay.classList.remove('show');
         setTimeout(sparkleBurst, 350);
-      }, msgs.length*1500 + 300);
+      }, msgs.length * 1500 + 300);
     }
 
-    function sparkleBurst(){
-      const items=['✨','🌟','💫','🎉','💖','🌸'];
-      for(let i=0;i<40;i++){
-        setTimeout(()=>{
-          const e=document.createElement('div'); e.className='floaty';
-          e.textContent=items[Math.floor(Math.random()*items.length)];
-          e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${18+Math.random()*22}px;
-            animation-duration:${2+Math.random()*2}s;`;
-          document.body.appendChild(e); setTimeout(()=>e.remove(),5000);
-        },i*30);
+    function sparkleBurst() {
+      const items = ['✨', '🌟', '💫', '🎉', '💖', '🌸'];
+      for (let i = 0; i < 40; i++) {
+        setTimeout(() => {
+          const e = document.createElement('div'); e.className = 'floaty';
+          e.textContent = items[Math.floor(Math.random() * items.length)];
+          e.style.cssText = `left:${Math.random() * 100}vw;bottom:-20px;font-size:${18 + Math.random() * 22}px;
+            animation-duration:${2 + Math.random() * 2}s;`;
+          document.body.appendChild(e); setTimeout(() => e.remove(), 5000);
+        }, i * 30);
       }
     }
 
-    function toggleLang(){
-      lang=lang==='en'?'ta':'en';
-      document.getElementById('langBtn').textContent=lang==='en'?'🌐 தமிழ்':'🌐 English';
+    function toggleLang() {
+      lang = lang === 'en' ? 'ta' : 'en';
+      document.getElementById('langBtn').textContent = lang === 'en' ? '🌐 தமிழ்' : '🌐 English';
       renderPanel();
     }
-    function goBack(){ music.pause(); goNav('/surprice.html'); }
+    function goBack() { music.pause(); goNav('/surprice.html'); }
 
-    const emojis=['✨','🌟','💛','🎈','🌸'];
-    function spawnFloat(){
-      const e=document.createElement('div'); e.className='floaty';
-      e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-      e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${14+Math.random()*16}px;
-        animation-duration:${6+Math.random()*5}s;`;
-      document.body.appendChild(e); setTimeout(()=>e.remove(),11000);
+    const emojis = ['✨', '🌟', '💛', '🎈', '🌸'];
+    function spawnFloat() {
+      const e = document.createElement('div'); e.className = 'floaty';
+      e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      e.style.cssText = `left:${Math.random() * 100}vw;bottom:-20px;font-size:${14 + Math.random() * 16}px;
+        animation-duration:${6 + Math.random() * 5}s;`;
+      document.body.appendChild(e); setTimeout(() => e.remove(), 11000);
     }
-    setInterval(spawnFloat,700);
+    setInterval(spawnFloat, 700);
 
     loadConfig();
   </script>
-<script>
-  function goNav(url){
-    var ov = document.getElementById('ptOverlay');
-    if(!ov){ window.location.href = url; return; }
-    ov.classList.add('show');
-    setTimeout(function(){ window.location.href = url; }, 620);
-  }
-</script>
+  <script>
+    function goNav(url) {
+      var ov = document.getElementById('ptOverlay');
+      if (!ov) { window.location.href = url; return; }
+      ov.classList.add('show');
+      setTimeout(function () { window.location.href = url; }, 620);
+    }
+  </script>
 </body>
+
 </html>

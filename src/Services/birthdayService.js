@@ -18,7 +18,7 @@ exports.unlockSurprise = (payload) => {
   if (!valid) {
     return {
       success: false,
-      message: "Try again ❤️"
+      message: "Please enter Princess❤️"
     };
   }
 

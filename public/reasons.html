@@ -62,17 +62,24 @@
       line-height:1.2;text-align:center;margin-bottom:20px;
     }
     @keyframes shimmer{to{background-position:200% center}}
-    .reason-card{
-      width:min(500px,94vw);
-      background:rgba(255,255,255,.13);
-      border:1px solid rgba(255,255,255,.3);
-      backdrop-filter:blur(24px);
-      border-radius:28px;
-      padding:clamp(24px,5vw,36px);
-      box-shadow:0 12px 48px rgba(255,45,120,.28), inset 0 1px 0 rgba(255,255,255,.3);
-      text-align:center; position:relative; overflow:hidden;
-      min-height:160px;
-      display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;
+    .reason-card {
+      width: min(500px, 94vw);
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.3);
+      backdrop-filter: blur(20px) saturate(180%); /* this blurs floaties behind the card */
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-radius: 28px;
+      padding: clamp(24px,5vw,36px);
+      box-shadow: 0 12px 48px rgba(255,45,120,.28), inset 0 1px 0 rgba(255,255,255,.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
     .reason-card::before{
       content:''; position:absolute;inset:0;
@@ -113,7 +120,7 @@
       0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}
       95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(360deg);opacity:0}
     }
-    .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
+    .floaty{position:fixed;pointer-events:none;z-index:-2;animation:floatUp linear forwards;}
     @keyframes floatUp{
       0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}
       95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}

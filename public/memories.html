@@ -1,214 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Memories 📸</title>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@300;400;600;700;800&display=swap"
+    rel="stylesheet" />
   <style>
-    :root{
-      --rose:#ff2d78;--coral:#ff6b6b;--peach:#ffb347;--gold:#ffd700;
-      --magenta:#e91e8c;--lavender:#c77dff;
-      --script:'Dancing Script',cursive;--body:'Nunito',sans-serif;
+    :root {
+      --rose: #ff2d78;
+      --coral: #ff6b6b;
+      --peach: #ffb347;
+      --gold: #ffd700;
+      --magenta: #e91e8c;
+      --lavender: #c77dff;
+      --script: 'Dancing Script', cursive;
+      --body: 'Nunito', sans-serif;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    body{
-      height:100dvh; overflow:hidden;
-      display:flex;flex-direction:column;justify-content:center;align-items:center;
-      font-family:var(--body); color:white; padding:20px;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: var(--body);
+      color: white;
+      padding: 20px;
       background: radial-gradient(ellipse at 0% 100%, #ff2d78 0%, transparent 50%),
-                  radial-gradient(ellipse at 100% 0%,  #219ebc 0%, transparent 50%),
-                  radial-gradient(ellipse at 50% 50%,  #7209b7 0%, transparent 55%),
-                  linear-gradient(160deg,#020a1a 0%,#140028 50%,#001a10 100%);
+        radial-gradient(ellipse at 100% 0%, #219ebc 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, #7209b7 0%, transparent 55%),
+        linear-gradient(160deg, #020a1a 0%, #140028 50%, #001a10 100%);
     }
 
-    .back-btn{
-      position:fixed;top:16px;left:16px;z-index:200;
-      padding:9px 18px;border:1px solid rgba(255,255,255,.3);border-radius:50px;
-      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
-      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
-    }
-    .back-btn:hover{background:rgba(255,255,255,.3);}
-    .lang-btn{
-      position:fixed;top:16px;right:16px;z-index:200;
-      padding:9px 18px;border:1px solid rgba(255,255,255,.3);border-radius:50px;
-      background:rgba(255,255,255,.18);backdrop-filter:blur(12px);
-      color:white;font-family:var(--body);font-weight:700;font-size:13px;cursor:pointer;transition:.25s;
-    }
-    .lang-btn:hover{background:rgba(255,255,255,.3);}
-
-    .hero{
-      text-align:center; position:relative; z-index:10;
-      animation:fadeUp .8s ease both;
-    }
-    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-
-    .hero-title{
-      font-family:var(--script);font-size:clamp(36px,10vw,56px);font-weight:700;
-      background:linear-gradient(90deg,#fff,var(--gold),#fff);background-size:200%;
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-      animation:shimmer 3s linear infinite;
-      filter:drop-shadow(0 0 16px rgba(255,215,0,.5));
-    }
-    @keyframes shimmer{to{background-position:200% center}}
-
-    .hero-sub{font-size:15px;opacity:.8;margin:6px 0 28px;font-weight:600;}
-
-    .show-btn{
-      padding:16px 40px;
-      background:linear-gradient(135deg,#ff2d78,#e91e8c,#ffb347);
-      border:none;border-radius:50px;
-      color:white;font-family:var(--body);font-weight:800;font-size:17px;
-      cursor:pointer;transition:.3s;
-      box-shadow:0 8px 32px rgba(255,45,120,.5);
-      position:relative;overflow:hidden;
-    }
-    .show-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.2),transparent);}
-    .show-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 40px rgba(255,45,120,.65);}
-    .hint{margin-top:12px;font-size:13px;opacity:.55;letter-spacing:1px;}
-
-    /* ===== Stage behind the ring: soft rotating color glow + sparkle field ===== */
-    .stage-glow{
-      position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-      width:min(120vw,900px);height:min(120vw,900px);
-      pointer-events:none;z-index:5;opacity:0;transition:opacity 1s ease;
-      background:conic-gradient(from 0deg,
-        rgba(255,45,120,.35),rgba(255,179,71,.3),rgba(199,125,255,.32),
-        rgba(33,158,188,.3),rgba(255,45,120,.35));
-      filter:blur(60px);
-      animation:glowSpin 14s linear infinite;
-    }
-    .stage-glow.active{opacity:1;}
-    @keyframes glowSpin{to{transform:translate(-50%,-50%) rotate(360deg);}}
-
-    .sparkle-field{position:fixed;inset:0;pointer-events:none;z-index:6;}
-    .sparkle{
-      position:absolute;border-radius:50%;
-      background:radial-gradient(circle,#fff 0%,var(--gold) 45%,transparent 70%);
-      animation:twinkle 2.2s ease-in-out infinite;
-      opacity:0;
-    }
-    @keyframes twinkle{
-      0%,100%{opacity:0;transform:scale(.3);}
-      50%{opacity:1;transform:scale(1);}
+    .back-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 200;
+      padding: 9px 18px;
+      border: 1px solid rgba(255, 255, 255, .3);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, .18);
+      backdrop-filter: blur(12px);
+      color: white;
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: .25s;
     }
 
-    .scene{
-      position:fixed;top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      width:clamp(240px,60vw,360px); height:clamp(240px,60vw,360px);
-      perspective:1000px;
-      opacity:0; pointer-events:none; transition:opacity .8s ease;
-      z-index:10;
-    }
-    .scene.active{opacity:1; pointer-events:auto;}
-
-    .ring{
-      width:100%;height:100%;
-      transform-style:preserve-3d;
-      will-change:transform;
-      animation:orbitSpin 22s linear infinite, ringBob 5.5s ease-in-out infinite;
-      animation-play-state:paused; /* stays paused until cards are actually rendered */
-    }
-    @keyframes orbitSpin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
-    @keyframes ringBob{
-      0%,100%{margin-top:0;}
-      50%{margin-top:-10px;}
-    }
-    .ring:hover{animation-play-state:paused;}
-    .ring.spin:hover{animation-play-state:paused;}
-
-    .mem-card{
-      position:absolute; width:clamp(100px,26vw,140px); height:clamp(130px,33vw,175px);
-      left:50%;top:50%;
-      margin-left:calc(clamp(100px,26vw,140px)/-2);
-      margin-top:calc(clamp(130px,33vw,175px)/-2);
-      border-radius:18px; overflow:hidden;
-      background:rgba(255,255,255,.1);
-      border:1px solid rgba(255,255,255,.3);
-      backdrop-filter:blur(10px);
-      box-shadow:0 8px 24px rgba(0,0,0,.4);
-      cursor:pointer; transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, border-color .35s ease;
-      animation:cardPulse 3.6s ease-in-out infinite;
-      animation-delay:var(--pulse-delay,0s);
-    }
-    @keyframes cardPulse{
-      0%,100%{box-shadow:0 8px 24px rgba(0,0,0,.4);border-color:rgba(255,255,255,.3);}
-      50%{box-shadow:0 8px 30px rgba(255,45,120,.45),0 0 18px rgba(255,215,0,.25);border-color:rgba(255,215,0,.55);}
-    }
-    .mem-card:hover{
-      transform:scale(1.12) translateZ(20px);
-      box-shadow:0 14px 44px rgba(255,45,120,.6),0 0 26px rgba(255,215,0,.4);
-      border-color:var(--gold);
-      z-index:5;
-    }
-    .mem-card img{width:100%;height:72%;object-fit:cover;display:block;}
-    .mem-card .caption{
-      padding:6px 8px; font-size:clamp(10px,2.5vw,12px); text-align:center;
-      line-height:1.4; opacity:.95; font-weight:600;
+    .back-btn:hover {
+      background: rgba(255, 255, 255, .3);
     }
 
-    /* shimmering sweep across each card, like light catching glass */
-    .mem-card::after{
-      content:'';position:absolute;inset:0;pointer-events:none;
-      background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);
-      background-size:250% 250%;
-      background-position:200% 0;
-      animation:cardSheen 4.5s ease-in-out infinite;
-      animation-delay:var(--sheen-delay,0s);
-      mix-blend-mode:overlay;
-    }
-    @keyframes cardSheen{
-      0%,30%{background-position:200% 0;}
-      60%,100%{background-position:-50% 0;}
-    }
-
-    .mem-placeholder{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      height:72%; font-size:clamp(28px,8vw,40px); gap:4px;
-      animation:emojiFloat 2.8s ease-in-out infinite;
-      animation-delay:var(--pulse-delay,0s);
-    }
-    @keyframes emojiFloat{
-      0%,100%{transform:translateY(0) scale(1);}
-      50%{transform:translateY(-4px) scale(1.08);}
+    .lang-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 200;
+      padding: 9px 18px;
+      border: 1px solid rgba(255, 255, 255, .3);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, .18);
+      backdrop-filter: blur(12px);
+      color: white;
+      font-family: var(--body);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: .25s;
     }
 
-    .floaty{position:fixed;pointer-events:none;z-index:1;animation:floatUp linear forwards;}
-    @keyframes floatUp{
-      0%{transform:translateY(0) rotate(0);opacity:0}5%{opacity:1}
-      95%{opacity:.8}100%{transform:translateY(-115dvh) rotate(720deg);opacity:0}
+    .lang-btn:hover {
+      background: rgba(255, 255, 255, .3);
+    }
+
+    .hero {
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      animation: fadeUp .8s ease both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .hero-title {
+      font-family: var(--script);
+      font-size: clamp(36px, 10vw, 56px);
+      font-weight: 700;
+      background: linear-gradient(90deg, #fff, var(--gold), #fff);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
+      filter: drop-shadow(0 0 16px rgba(255, 215, 0, .5));
+    }
+
+    @keyframes shimmer {
+      to {
+        background-position: 200% center
+      }
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      opacity: .8;
+      margin: 6px 0 28px;
+      font-weight: 600;
+    }
+
+    .show-btn {
+      padding: 16px 40px;
+      background: linear-gradient(135deg, #ff2d78, #e91e8c, #ffb347);
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-family: var(--body);
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+      transition: .3s;
+      box-shadow: 0 8px 32px rgba(255, 45, 120, .5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .show-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(255, 255, 255, .2), transparent);
+    }
+
+    .show-btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 12px 40px rgba(255, 45, 120, .65);
+    }
+
+    .hint {
+      margin-top: 12px;
+      font-size: 13px;
+      opacity: .55;
+      letter-spacing: 1px;
+    }
+
+    .stage-glow {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(120vw, 900px);
+      height: min(120vw, 900px);
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 1s ease;
+      background: conic-gradient(from 0deg,
+          rgba(255, 45, 120, .35), rgba(255, 179, 71, .3), rgba(199, 125, 255, .32),
+          rgba(33, 158, 188, .3), rgba(255, 45, 120, .35));
+      filter: blur(60px);
+      animation: glowSpin 14s linear infinite;
+    }
+
+    .stage-glow.active {
+      opacity: 1;
+    }
+
+    @keyframes glowSpin {
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    .sparkle-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 6;
+    }
+
+    .sparkle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 0%, var(--gold) 45%, transparent 70%);
+      animation: twinkle 2.2s ease-in-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: scale(.3);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .scene {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(240px, 60vw, 360px);
+      height: clamp(240px, 60vw, 360px);
+      perspective: 1000px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .8s ease;
+      z-index: 10;
+    }
+
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .ring {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      will-change: transform;
+      animation: orbitSpin 22s linear infinite, ringBob 5.5s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+
+    @keyframes orbitSpin {
+      from {
+        transform: rotateY(0)
+      }
+
+      to {
+        transform: rotateY(360deg)
+      }
+    }
+
+    @keyframes ringBob {
+
+      0%,
+      100% {
+        margin-top: 0;
+      }
+
+      50% {
+        margin-top: -10px;
+      }
+    }
+
+    .ring:hover {
+      animation-play-state: paused;
+    }
+
+    .ring.spin:hover {
+      animation-play-state: paused;
+    }
+
+    .mem-card {
+      position: absolute;
+      width: clamp(100px, 26vw, 140px);
+      height: clamp(130px, 33vw, 175px);
+      left: 50%;
+      top: 50%;
+      margin-left: calc(clamp(100px, 26vw, 140px)/-2);
+      margin-top: calc(clamp(130px, 33vw, 175px)/-2);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, .1);
+      border: 1px solid rgba(255, 255, 255, .3);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+      cursor: pointer;
+      transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), box-shadow .35s ease, border-color .35s ease;
+      animation: cardPulse 3.6s ease-in-out infinite;
+      animation-delay: var(--pulse-delay, 0s);
+    }
+
+    @keyframes cardPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+        border-color: rgba(255, 255, 255, .3);
+      }
+
+      50% {
+        box-shadow: 0 8px 30px rgba(255, 45, 120, .45), 0 0 18px rgba(255, 215, 0, .25);
+        border-color: rgba(255, 215, 0, .55);
+      }
+    }
+
+    .mem-card:hover {
+      transform: scale(1.12) translateZ(20px);
+      box-shadow: 0 14px 44px rgba(255, 45, 120, .6), 0 0 26px rgba(255, 215, 0, .4);
+      border-color: var(--gold);
+      z-index: 5;
+    }
+
+    .mem-card img {
+      width: 100%;
+      height: 62%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .mem-card .caption {
+      padding: 6px 8px;
+      font-size: clamp(9px, 2.2vw, 11px);
+      text-align: center;
+      line-height: 1.55;
+      opacity: .95;
+      font-weight: 600;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      word-break: break-word;
+    }
+    
+    .mem-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .45) 50%, transparent 65%);
+      background-size: 250% 250%;
+      background-position: 200% 0;
+      animation: cardSheen 4.5s ease-in-out infinite;
+      animation-delay: var(--sheen-delay, 0s);
+      mix-blend-mode: overlay;
+    }
+
+    @keyframes cardSheen {
+
+      0%,
+      30% {
+        background-position: 200% 0;
+      }
+
+      60%,
+      100% {
+        background-position: -50% 0;
+      }
+    }
+
+    .mem-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 62%;
+      font-size: clamp(28px, 8vw, 40px);
+      gap: 4px;
+      animation: emojiFloat 2.8s ease-in-out infinite;
+      animation-delay: var(--pulse-delay, 0s);
+    }
+
+    @keyframes emojiFloat {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-4px) scale(1.08);
+      }
+    }
+
+    .floaty {
+      position: fixed;
+      pointer-events: none;
+      z-index: 1;
+      animation: floatUp linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0);
+        opacity: 0
+      }
+
+      5% {
+        opacity: 1
+      }
+
+      95% {
+        opacity: .8
+      }
+
+      100% {
+        transform: translateY(-115dvh) rotate(720deg);
+        opacity: 0
+      }
     }
   </style>
-<style id="pt-style">
-.pt-overlay{
-  position:fixed; inset:0; z-index:9999;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
-  background:radial-gradient(ellipse at 50% 40%, rgba(199,125,255,.28), transparent 60%),
-             linear-gradient(160deg,rgba(26,0,20,.94),rgba(45,0,48,.94) 50%,rgba(26,10,34,.94));
-  opacity:0; pointer-events:none; transition:opacity .25s ease;
-  backdrop-filter:blur(8px);
-}
-.pt-overlay.show{ opacity:1; pointer-events:all; }
-.pt-cake{ position:relative; width:80px; height:72px; display:flex; align-items:center; justify-content:center; }
-.pt-cake-half{ position:absolute; font-size:56px; line-height:1; filter:drop-shadow(0 0 12px rgba(255,215,0,.55)); transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
-.pt-cake-left{ clip-path:inset(0 50% 0 0); }
-.pt-cake-right{ clip-path:inset(0 0 0 50%); }
-.pt-overlay.show .pt-cake-left{ transform:translate(-9px,1px) rotate(-7deg); }
-.pt-overlay.show .pt-cake-right{ transform:translate(9px,1px) rotate(7deg); }
-.pt-knife{ position:absolute; font-size:26px; opacity:0; transform:rotate(38deg); }
-.pt-overlay.show .pt-knife{ animation:ptKnife .6s ease forwards; }
-@keyframes ptKnife{
-  0%{ left:-30px; top:-30px; opacity:0; }
-  15%{ opacity:1; }
-  55%{ left:50%; top:46%; }
-  100%{ left:120%; top:-30px; opacity:0; }
-}
-.pt-caption{ font-family:'Dancing Script',cursive; font-size:16px; font-weight:700; color:#ffd700; letter-spacing:.5px;
-  text-shadow:0 0 10px rgba(255,45,120,.5); opacity:.95; }
-</style>
+  <style id="pt-style">
+    .pt-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: radial-gradient(ellipse at 50% 40%, rgba(199, 125, 255, .28), transparent 60%),
+        linear-gradient(160deg, rgba(26, 0, 20, .94), rgba(45, 0, 48, .94) 50%, rgba(26, 10, 34, .94));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .pt-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .pt-cake {
+      position: relative;
+      width: 80px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pt-cake-half {
+      position: absolute;
+      font-size: 56px;
+      line-height: 1;
+      filter: drop-shadow(0 0 12px rgba(255, 215, 0, .55));
+      transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .pt-cake-left {
+      clip-path: inset(0 50% 0 0);
+    }
+
+    .pt-cake-right {
+      clip-path: inset(0 0 0 50%);
+    }
+
+    .pt-overlay.show .pt-cake-left {
+      transform: translate(-9px, 1px) rotate(-7deg);
+    }
+
+    .pt-overlay.show .pt-cake-right {
+      transform: translate(9px, 1px) rotate(7deg);
+    }
+
+    .pt-knife {
+      position: absolute;
+      font-size: 26px;
+      opacity: 0;
+      transform: rotate(38deg);
+    }
+
+    .pt-overlay.show .pt-knife {
+      animation: ptKnife .6s ease forwards;
+    }
+
+    @keyframes ptKnife {
+      0% {
+        left: -30px;
+        top: -30px;
+        opacity: 0;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      55% {
+        left: 50%;
+        top: 46%;
+      }
+
+      100% {
+        left: 120%;
+        top: -30px;
+        opacity: 0;
+      }
+    }
+
+    .pt-caption {
+      font-family: 'Dancing Script', cursive;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffd700;
+      letter-spacing: .5px;
+      text-shadow: 0 0 10px rgba(255, 45, 120, .5);
+      opacity: .95;
+    }
+  </style>
 </head>
+
 <body>
   <div class="pt-overlay" id="ptOverlay">
     <div class="pt-cake">
@@ -220,7 +534,7 @@
   </div>
 
   <audio id="bgMusic" loop>
-    <source src="/music/24 Love Bgm.mp3" type="audio/mpeg"/>
+    <source src="/music/24 Love Bgm.mp3" type="audio/mpeg" />
   </audio>
 
   <button class="back-btn" onclick="goBack()">← Back</button>
@@ -241,119 +555,118 @@
   </div>
 
   <script>
-    const music=document.getElementById('bgMusic');
-    let lang='en', started=false, memories=[];
+    const music = document.getElementById('bgMusic');
+    let lang = 'en', started = false, memories = [];
 
-    function start(){
-      if(started) return; started=true;
-      music.play().catch(()=>{});
-      document.getElementById('hero').style.transition='opacity .5s';
-      document.getElementById('hero').style.opacity='0';
-      setTimeout(()=>{ document.getElementById('hero').style.display='none'; },500);
+    function start() {
+      if (started) return; started = true;
+      music.play().catch(() => { });
+      document.getElementById('hero').style.transition = 'opacity .5s';
+      document.getElementById('hero').style.opacity = '0';
+      setTimeout(() => { document.getElementById('hero').style.display = 'none'; }, 500);
       document.getElementById('scene').classList.add('active');
       document.getElementById('stageGlow').classList.add('active');
       spawnSparkles();
       loadMemories();
     }
 
-    function spawnSparkles(){
-      const field=document.getElementById('sparkleField');
-      const count=window.innerWidth<600?16:28;
-      for(let i=0;i<count;i++){
-        const s=document.createElement('div');
-        s.className='sparkle';
-        const size=2+Math.random()*4;
-        s.style.cssText=`width:${size}px;height:${size}px;
-          left:${Math.random()*100}vw;top:${Math.random()*100}vh;
-          animation-duration:${1.6+Math.random()*2.4}s;
-          animation-delay:${Math.random()*3}s;`;
+    function spawnSparkles() {
+      const field = document.getElementById('sparkleField');
+      const count = window.innerWidth < 600 ? 16 : 28;
+      for (let i = 0; i < count; i++) {
+        const s = document.createElement('div');
+        s.className = 'sparkle';
+        const size = 2 + Math.random() * 4;
+        s.style.cssText = `width:${size}px;height:${size}px;
+          left:${Math.random() * 100}vw;top:${Math.random() * 100}vh;
+          animation-duration:${1.6 + Math.random() * 2.4}s;
+          animation-delay:${Math.random() * 3}s;`;
         field.appendChild(s);
       }
     }
 
-    async function loadMemories(){
-      try{
-        // Don't let a slow/hanging API leave the ring empty & spinning forever.
-        // Give it 2.5s, then fall back to placeholders so the user always sees motion fast.
-        const controller=new AbortController();
-        const timeout=setTimeout(()=>controller.abort(), 2500);
-        const res=await fetch('/api/birthday/memories', {signal:controller.signal});
+    async function loadMemories() {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 2500);
+        const res = await fetch('/api/birthday/memories', { signal: controller.signal });
         clearTimeout(timeout);
-        memories=await res.json();
-      } catch(e){
-        memories=[
-          {image:null, emoji:'🌸', caption:{en:'Precious moments',ta:'அன்பான தருணங்கள்'}},
-          {image:null, emoji:'💖', caption:{en:'Full of love',ta:'அன்பு நிறைந்தது'}},
-          {image:null, emoji:'✨', caption:{en:'Golden memories',ta:'தங்க நினைவுகள்'}},
-          {image:null, emoji:'🎂', caption:{en:'Sweet celebrations',ta:'இனிய கொண்டாட்டங்கள்'}},
-          {image:null, emoji:'🌺', caption:{en:'Beautiful days',ta:'அழகான நாட்கள்'}},
-          {image:null, emoji:'💐', caption:{en:'Blooming joy',ta:'மலரும் மகிழ்ச்சி'}},
+        memories = await res.json();
+      } catch (e) {
+        memories = [
+          { image: null, emoji: '🌸', caption: { en: 'Precious moments', ta: 'அன்பான தருணங்கள்' } },
+          { image: null, emoji: '💖', caption: { en: 'Full of love', ta: 'அன்பு நிறைந்தது' } },
+          { image: null, emoji: '✨', caption: { en: 'Golden memories', ta: 'தங்க நினைவுகள்' } },
+          { image: null, emoji: '🎂', caption: { en: 'Sweet celebrations', ta: 'இனிய கொண்டாட்டங்கள்' } },
+          { image: null, emoji: '🌺', caption: { en: 'Beautiful days', ta: 'அழகான நாட்கள்' } },
+          { image: null, emoji: '💐', caption: { en: 'Blooming joy', ta: 'மலரும் மகிழ்ச்சி' } },
         ];
       }
       renderRing();
     }
 
-    function renderRing(){
-      const ring=document.getElementById('ring');
+    function renderRing() {
+      const ring = document.getElementById('ring');
       ring.classList.remove('spin');
-      ring.style.animationPlayState='paused'; // freeze while we rebuild children
-      ring.innerHTML='';
-      const total=memories.length;
-      const isMobile=window.innerWidth<600;
-      const radius=isMobile?160:240;
+      ring.style.animationPlayState = 'paused'; 
+      ring.innerHTML = '';
+      const total = memories.length;
+      const isMobile = window.innerWidth < 600;
+      const radius = isMobile ? 160 : 240;
 
-      memories.forEach((m,i)=>{
-        const angle=(i/total)*360;
-        const card=document.createElement('div');
-        card.className='mem-card';
-        card.style.transform=`rotateY(${angle}deg) translateZ(${radius}px)`;
-        // stagger each card's ambient pulse/sheen so the ring shimmers rather than
-        // pulsing all at once like a flashing sign
-        card.style.setProperty('--pulse-delay', (i*0.35)+'s');
-        card.style.setProperty('--sheen-delay', (i*0.5)+'s');
+      memories.forEach((m, i) => {
+        const angle = (i / total) * 360;
+        const card = document.createElement('div');
+        card.className = 'mem-card';
+        card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+        card.style.setProperty('--pulse-delay', (i * 0.35) + 's');
+        card.style.setProperty('--sheen-delay', (i * 0.5) + 's');
 
-        if(m.image){
-          card.innerHTML=`<img src="${m.image}" alt="memory"/><div class="caption">${m.caption[lang]}</div>`;
+        if (m.image) {
+          card.innerHTML = `<img src="${m.image}" alt="memory"/><div class="caption">${m.caption[lang]}</div>`;
         } else {
-          card.innerHTML=`<div class="mem-placeholder">${m.emoji||'💖'}</div><div class="caption">${m.caption[lang]}</div>`;
+          card.innerHTML = `<div class="mem-placeholder">${m.emoji || '💖'}</div><div class="caption">${m.caption[lang]}</div>`;
         }
         ring.appendChild(card);
       });
 
-      // Let the browser paint the new cards first, then start rotation cleanly
-      // on the next frame — avoids the "snap into mid-rotation" lag/stutter.
-      requestAnimationFrame(()=>{
-        requestAnimationFrame(()=>{
-          ring.style.animationPlayState='running';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          ring.style.animationPlayState = 'running';
         });
       });
     }
 
-    function toggleLang(){
-      lang=lang==='en'?'ta':'en';
-      document.getElementById('langBtn').textContent=lang==='en'?'🌐 தமிழ்':'🌐 English';
-      if(started) renderRing();
+    function toggleLang() {
+      lang = lang === 'en' ? 'ta' : 'en';
+      document.getElementById('langBtn').textContent = lang === 'en' ? '🌐 தமிழ்' : '🌐 English';
+      document.documentElement.style.setProperty(
+        '--caption-size',
+        lang === 'ta' ? '9px' : 'clamp(10px,2.5vw,12px)'
+      );
+      if (started) renderRing();
     }
-    function goBack(){ goNav('/surprice.html'); }
+    function goBack() { goNav('/surprice.html'); }
 
-    const emojis=['🌸','💖','✨','🌺','🌹','💐','🎀','💝'];
-    function spawnFloat(){
-      const e=document.createElement('div');e.className='floaty';
-      e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-      e.style.cssText=`left:${Math.random()*100}vw;bottom:-20px;font-size:${14+Math.random()*18}px;
-        animation-duration:${6+Math.random()*6}s;`;
-      document.body.appendChild(e);setTimeout(()=>e.remove(),12000);
+    const emojis = ['🌸', '💖', '✨', '🌺', '🌹', '💐', '🎀', '💝'];
+    function spawnFloat() {
+      const e = document.createElement('div'); e.className = 'floaty';
+      e.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      e.style.cssText = `left:${Math.random() * 100}vw;bottom:-20px;font-size:${14 + Math.random() * 18}px;
+        animation-duration:${6 + Math.random() * 6}s;`;
+      document.body.appendChild(e); setTimeout(() => e.remove(), 12000);
     }
-    setInterval(spawnFloat,550);
-    for(let i=0;i<5;i++) setTimeout(spawnFloat,i*300);
+    setInterval(spawnFloat, 550);
+    for (let i = 0; i < 5; i++) setTimeout(spawnFloat, i * 300);
   </script>
-<script>
-  function goNav(url){
-    var ov = document.getElementById('ptOverlay');
-    if(!ov){ window.location.href = url; return; }
-    ov.classList.add('show');
-    setTimeout(function(){ window.location.href = url; }, 620);
-  }
-</script>
+  <script>
+    function goNav(url) {
+      var ov = document.getElementById('ptOverlay');
+      if (!ov) { window.location.href = url; return; }
+      ov.classList.add('show');
+      setTimeout(function () { window.location.href = url; }, 620);
+    }
+  </script>
 </body>
+
 </html>

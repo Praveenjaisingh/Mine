@@ -246,7 +246,7 @@
     <div id="loginBox">
       <div class="input-wrap">
         <span class="input-icon">👸</span>
-        <input id="name" placeholder="Enter your name, Princess…" autocomplete="off"/>
+        <input id="name" placeholder="Enter your name (Princess)…" autocomplete="off"/>
       </div>
       <button class="unlock-btn" onclick="unlock()">✨ Unlock My Surprise ✨</button>
       <p id="msg"></p>
@@ -305,7 +305,7 @@
       music.play().catch(()=>{});
       const name=document.getElementById('name').value.trim();
       const msgEl=document.getElementById('msg');
-      if(!name){ msgEl.textContent='💌 Please enter your name!'; msgEl.className='error'; return; }
+      if(!name){ msgEl.textContent='💌 Please enter your name (Princess)!'; msgEl.className='error'; return; }
 
       try{
         const res=await fetch('/api/birthday/unlock',{
